@@ -1,27 +1,62 @@
 #!/bin/bash
 
-# shellcheck source=./helpers.sh
-source "$(dirname "$0")/helpers.sh"
+YELLOW="33"
+BOLD_YELLOW="\e[1;${YELLOW}m"
+END_COLOR="\e[0m"
 
-remove_folders() {
-  message "Removing: Generated folders.."
-  rm -rf var/view_preprocessed/
-  rm -rf pub/static/frontend/
-  rm -r generated/*/*
-  rm -rf pub/static/*
+# Output message
+function message() {
+  message=$1
+  echo -e "${BOLD_YELLOW} ${message} ${END_COLOR}";
 }
 
-## Run first time a project need to be build (Local)
-if [ "$1" = "deploy" ]; then
+#
+# Automatically configures magento2 project with mutagen sync & DDEV
+#
 
-  # Does .ddev folder exists? No, create folder and run magento2 config setup
-  if [ ! -d "../.ddev" ]; then
-      ddev config --project-type=magento2 --docroot=pub --create-docroot
-      message "DDEV config has been created"
+# Copy helper files into magento bin folder
+# Stop process if directory doesn't exist
+if [ ! -d "bin" ]; then
+  message -e "[!] Folder [bin] does not exist. Make sure Magento2 project is installed"
+  exit 1
+else
+  message "Downloading helper files"
+  curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/mutagen > bin/compile.sh
+  curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers > bin/helpers.sh
+  # make files executable
+  chmod +x bin/helpers && chmod +x bin/compile
+  message "Helper files downloaded to bin folder"
+fi
+
+# Check if DDEV directory exist
+if [ ! -d ".ddev" ]; then
+  message "[!] DDEV folder does not appear to be in the project."
+
+  # Prompt for auto install
+  read -r -p "Do you want me to install .ddev? (y/n)" answer
+  case ${answer:0:1} in
+    y|Y|Yes )
+        ddev config --project-type=magento2 --docroot=pub --create-docroot
+        message ".ddev folder created"
+    ;;
+    * )
+        exit 1
+    ;;
+  esac
+
+
+  # Copy aliases file
+  if [ ! -f ".ddev/homeadditions/.bash_aliases"  ]; then
+    cp -v .ddev/homeadditions/bash_aliases.example .bash_aliases
+
+    echo -e "alias magento={bin/compile.sh}"
+    echo -e "alias m={bin/magento}"
+    echo -e "alias composer1={composer self-update --1}"
+    echo -e "alias composer2={composer self-update --2}"
   fi
 
-  # Create DDEV elasticsearch-file if not added
-  if [ ! -f "../.ddev/docker-compose.elasticsearch.yaml" ]; then
+  # Create DDEV elasticsearch if not already added
+  if [ ! -f ".ddev/docker-compose.elasticsearch.yaml" ]; then
     {
         echo -e "version: '3.6'"
         echo -e "services:"
@@ -53,110 +88,21 @@ if [ "$1" = "deploy" ]; then
         echo -e "   elasticsearch:"
     } > .ddev/docker-compose.elasticsearch.yaml
 
-    message "Docker-compose.elasticsearch.yaml Created"
+    message "Docker-compose.elasticsearch.yaml added"
   fi
-
-  # Run Mutagen+Docker (if .ddev folder exist)
-  if [ -d "../.ddev" ]; then
-
-      message "Mutagen synchronizing: This could take a while.."
-      curl https://raw.githubusercontent.com/williamengbjerg/ddev-mutagen/master/setup.sh | bash
-      sleep 120 # sleep while mutagen is synchronizing folder into docker web-container
-
-      # Make sure mutagen daemon is running
-      mutagen daemon start
-      mutagen daemon register
-      sleep 2
-
-      # Run DDEV project in Docker
-      message "Running docker setup"
-      ddev start
-      sleep 120 # sleep while docker is setting up project
-  fi
-
-  message "Setup Developer & Enable modules..."
-  bin/magento deploy:mode:set developer
-  bin/magento module:enable --all
-
-  message "Disable modules:"
-  bin/magento module:disable Magento_Csp              # disable module
-  bin/magento module:disable Magento_TwoFactorAuth    # disable module
-
-  bin/magento setup:upgrade
-  bin/magento setup:static-content:deploy -f
-  bin/magento setup:static-content:deploy -f da_DK
-  bin/magento setup:di:compile
-  bin/magento indexer:reindex
-  bin/magento cache:clean
-  bin/magento cache:flush
-  message "Deployed"
-
-## Install base repositories
-elif [ "$1" = "composer" ]; then
-  install_or_update_composer_packages false
-
-## Dump SQL with magerun2
-elif [ "$1" = "magerun" ]; then
-
-  MAGE_DIR=./n98-magerun2.phar
-
-  # Don't install if mage is already installed
-  if [ ! -f "$MAGE_DIR" ]; then
-    wget https://files.magerun.net/n98-magerun2.phar
-    chmod +x ./n98-magerun2.phar
-  fi
-
-  # Check version (test)
-  ./n98-magerun2.phar --version
-
-  ## Run SQL-export
-  # ./n98-magerun2.phar db:dump --strip="@development"
-
-  ## Clean up: Forget and remove n98-magerun2.phar
-  rm -rf ./n98-magerun2.phar
-
-## Rebuild: Usually used on PROD
-elif [ "$1" = "rebuild" ]; then
-
-  # remove generated folders
-  remove_folders
-
-  message "Re-Compiling Files.."
-  bin/magento cache:clean
-  bin/magento cache:flush
-  bin/magento setup:upgrade
-  bin/magento setup:di:compile
-  bin/magento setup:static-content:deploy -f
-  bin/magento setup:static-content:deploy -f da_DK
-  message "Files Has Been Re-build"
-
-## Compile LESS-files
-elif [ "$1" = "tailwind" ]; then
-
-  # remove generated folders
-  remove_folders
-
-  # Compile LESS files
-  # message "Compiling: Gulp Exec.."
-  # gulp exec --base
-
-  # Compile LESS files
-  # message "Compiling: Gulp LESS.."
-  # gulp less --base
-
-  # compile tailwindcss
-  message "Compiling: Tailwind.."
-  cd /var/www/html/app/design/frontend/Kommerce/base/web/css/tailwind || exit
-  npm run build
-  sleep 1
-  # npx tailwindcss-cli@latest build app/design/frontend/Kommerce/base/web/css/tailwind/tailwind_source.css -o app/design/frontend/Kommerce/base/web/css/tailwind.css
-
-  cd /var/www/html/ || exit
-
-  # Clean XML etc
-  message "Cache: Clean/Flush.."
-  bin/magento cache:clean
-  bin/magento cache:flush
-
-  message "Done Compiling"
 fi
+
+# Setup Mutagen
+if [ -d ".ddev" ]; then
+
+    # check if mutagen is installed
+    if [ ! -f ".ddev/commands/host/mutagen" ]; then
+      message "Setting up mutagen sync script in current ddev project"
+      curl https://raw.githubusercontent.com/williamengbjerg/ddev-mutagen/master/setup.sh | bash
+    fi
+
+    # Run DDEV project in Docker
+    message "Running docker setup"
+    ddev start
+fi
+
