@@ -23,18 +23,17 @@ curl https://raw.githubusercontent.com/websnack-dk/magento/main/setup.sh | bash
 
 ## Shell script
 
-`ddev ssh` into web container and use aliases. 
+`ddev ssh` into ddev web-container and use commands below. 
 
 ```html
 ---- multiply commands ---- 
 
-magento             => "bin/compile.sh"
-magento composer    => Install or upgrade base composer packages  
-magento deploy      => Enables all modules, except Magento_Csp & Magento_TwoFactorAuth & runs base setup 
+magento composer    => Install or upgrade (base) composer packages  
+magento deploy      => Enables all modules, except Magento_Csp & Magento_TwoFactorAuth & Runs base setup 
 magento rebuild     => Re-compiling all files: Clean, Flush, Upgrade, di:compile & static-content:deploy da_DK  
-magento clean       => Compile Clean/Flush & Runs static-content:deploy da_DK 
+magento clean       => Compile Clean/Flush & Run static-content:deploy da_DK 
 magento tailwind    => Compile css file, remove generated folders & Clean/flush 
-magento magerun     => Export SQL via. magerun2 and removes folder n98-magerun2.phar
+magento magerun     => Export SQL via. magerun2 and removes n98-magerun2.phar
 
 
 ---- Magento commands ----
