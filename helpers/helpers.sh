@@ -1,22 +1,6 @@
 #!/bin/bash
 
-# GREEN="32"
-YELLOW="33"
-
-# BOLD_GREEN="\e[1;${GREEN}m"
-BOLD_YELLOW="\e[1;${YELLOW}m"
-END_COLOR="\e[0m"
-
-# Output message
-function message() {
-  message=$1
-  echo -e "${BOLD_YELLOW} ${message} ${END_COLOR}";
-}
-
-function isTrue() {
-  if [[ "${*^^}" =~ ^(TRUE|OUI|Y|O$|ON$|[1-9]) ]]; then return 0; fi
-  return 1
-}
+source
 
 ## Install repositories for BASE-theme
 function install_or_update_composer_packages() {

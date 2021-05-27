@@ -1,14 +1,10 @@
 #!/bin/bash
 
-YELLOW="33"
-BOLD_YELLOW="\e[1;${YELLOW}m"
-END_COLOR="\e[0m"
+# from github repo
+GITHUB=https://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@raw.githubusercontent.com/websnack-dk/magento/main/
 
-# Output message
-function message() {
-  message=$1
-  echo -e "${BOLD_YELLOW} ${message} ${END_COLOR}";
-}
+# shellcheck source=./helpers/func.sh
+source <(curl -s -O $GITHUB/helpers/func.sh)
 
 #
 # Automatically configures magento2 project with mutagen sync & DDEV
@@ -21,8 +17,8 @@ if [ ! -d "bin" ]; then
   exit 1
 else
   message "Downloading helper files"
-  curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/compile.sh > bin/compile.sh
-  curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/helpers.sh > bin/helpers.sh
+  curl -s $GITHUB/compile.sh > bin/compile.sh
+  curl -s $GITHUB/helpers.sh > bin/helpers.sh
   # make files executable
   chmod +x bin/helpers && chmod +x bin/compile
   message "Helper files downloaded to bin folder"
@@ -46,12 +42,21 @@ if [ ! -d ".ddev" ]; then
 
   # Copy aliases file
   if [ ! -f ".ddev/homeadditions/.bash_aliases"  ]; then
+    # copy file
     cat .ddev/homeadditions/bash_aliases.example > .ddev/homeadditions/.bash_aliases
+    # write to file
     cat >> .ddev/homeadditions/.bash_aliases << 'config'
 alias magento="bin/compile.sh"
 alias m="bin/magento"
 alias composer1="composer self-update --1"
 alias composer2="composer self-update --2"
+alias mdev="bin/magento deploy:mode:set developer"
+alias mclean="bin/magento cache:clean"
+alias mflush="bin/magento cache:flush"
+alias mdeploy="bin/magento setup:static-content:deploy -f da_DK"
+alias mcompile="bin/magento setup:di:compile"
+alias mupgrade="bin/magento setup:upgrade"
+alias mindexer="bin/magento indexer:reindex"
 config
   fi
 
@@ -92,7 +97,7 @@ config
   fi
 fi
 
-# Setup Mutagen
+# Setup Mutagen & Run DDEV
 if [ -d ".ddev" ]; then
 
     # check if mutagen is installed
@@ -102,7 +107,7 @@ if [ -d ".ddev" ]; then
     fi
 
     # Run DDEV project in Docker
-    message "Running docker setup"
+    message "Running DDEV"
     ddev start
 fi
 
