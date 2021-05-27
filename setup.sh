@@ -17,7 +17,7 @@ function message() {
 # Copy helper files into magento bin folder
 # Stop process if directory doesn't exist
 if [ ! -d "bin" ]; then
-  message -e "[!] Folder [bin] does not exist. Make sure Magento2 project is installed"
+  message "[!] Folder [bin] does not exist. Make sure Magento2 project is installed"
   exit 1
 else
   message "Downloading helper files"
@@ -32,7 +32,7 @@ fi
 if [ ! -d ".ddev" ]; then
   message "[!] DDEV folder does not appear to be in the project."
 
-  # Prompt for auto install
+  # Prompt for auto install or exit
   read -r -p "Do you want me to install .ddev? (y/n)" answer
   case ${answer:0:1} in
     y|Y|Yes )
@@ -44,15 +44,15 @@ if [ ! -d ".ddev" ]; then
     ;;
   esac
 
-
   # Copy aliases file
   if [ ! -f ".ddev/homeadditions/.bash_aliases"  ]; then
-    cp -v .ddev/homeadditions/bash_aliases.example .bash_aliases
-
-    echo -e "alias magento={bin/compile.sh}"
-    echo -e "alias m={bin/magento}"
-    echo -e "alias composer1={composer self-update --1}"
-    echo -e "alias composer2={composer self-update --2}"
+    cat .ddev/homeadditions/bash_aliases.example > .ddev/homeadditions/.bash_aliases
+    cat >> .ddev/homeadditions/.bash_aliases << 'config'
+alias magento="bin/compile.sh"
+alias m="bin/magento"
+alias composer1="composer self-update --1"
+alias composer2="composer self-update --2"
+config
   fi
 
   # Create DDEV elasticsearch if not already added
