@@ -21,8 +21,8 @@ if [ ! -d "bin" ]; then
   exit 1
 else
   message "Downloading helper files"
-  curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/mutagen > bin/compile.sh
-  curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers > bin/helpers.sh
+  curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/compile.sh > bin/compile.sh
+  curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/helpers.sh > bin/helpers.sh
   # make files executable
   chmod +x bin/helpers && chmod +x bin/compile
   message "Helper files downloaded to bin folder"
