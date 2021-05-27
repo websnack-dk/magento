@@ -1,6 +1,7 @@
 #!/bin/bash
 
-source
+# shellcheck source=./helpers.sh
+source "$(dirname "$0")/func.sh"
 
 ## Install repositories for BASE-theme
 function install_or_update_composer_packages() {
