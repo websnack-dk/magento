@@ -3,11 +3,32 @@
 # from github repo
 GITHUB=https://raw.githubusercontent.com/websnack-dk/magento/main/
 
-if [ ! -d "bin" ] && [ ! -f "bin/func.sh" ]; then
-  curl -s "$GITHUB/helpers/func.sh" > bin/func.sh
-else
-    # shellcheck source=./helpers/func.sh
-    source <(curl -s -O "$GITHUB/helpers/func.sh")
+# YELLOW="33"
+# BOLD_YELLOW="\e[1;${YELLOW}m"
+# END_COLOR="\e[0m"
+
+COLOR_REST="$(tput sgr0)"
+COLOR_GREEN="$(tput setaf 2)"
+
+# Output message
+function message() {
+  message=$1
+  printf '%s%s\n' " $COLOR_GREEN ${message} $COLOR_REST"
+}
+
+# Check if ddev is installed in system
+if command -v ddev &> /dev/null; then
+    # Prompt for auto install or exit
+    read -r -p "DDEV could not be found. $COLOR_GREEN Do you want to install DDEV? (Y/n) $COLOR_REST" answer
+    case ${answer:0:1} in
+      y|Y|Yes )
+          #brew install drud/ddev/ddev
+          message "DDEV has successfully been installed"
+      ;;
+      * )
+          exit 1
+      ;;
+    esac
 fi
 
 exit 1
@@ -23,19 +44,21 @@ if [ ! -d "bin" ]; then
   exit 1
 else
   message "Downloading helper files"
-  curl -s "$GITHUB/helpers/compile.sh" > bin/compile.sh
-  curl -s "$GITHUB/helpers/helpers.sh" > bin/helpers.sh
+  curl -s "$GITHUB"helpers/compile.sh?token=AAANLP447X33DZJGDPR35QTAWDZPW --output bin/compile.sh --silent
+  curl -s "$GITHUB"helpers/helpers.sh?token=AAANLP6EF7XPVPYA7UDHYPDAWDZOS --output bin/helpers.sh --silent
+  curl -s "$GITHUB"helpers/func.sh?token=AAANLPZ5E6DZPP4DLY5JLQLAWDZXW    --output bin/func.sh --silent
   # make files executable
-  chmod +x bin/helpers && chmod +x bin/compile
+  chmod +x bin/helpers.sh && chmod +x bin/compile.sh
   message "Helper files downloaded to bin folder"
 fi
+
 
 # Check if DDEV directory exist
 if [ ! -d ".ddev" ]; then
   message "[!] DDEV folder does not appear to be in the project."
 
   # Prompt for auto install or exit
-  read -r -p "Do you want me to install .ddev? (y/n)" answer
+  read -r -p "Do you want to setup .ddev folders? (y/n) " answer
   case ${answer:0:1} in
     y|Y|Yes )
         ddev config --project-type=magento2 --docroot=pub --create-docroot
@@ -46,25 +69,7 @@ if [ ! -d ".ddev" ]; then
     ;;
   esac
 
-  # Copy aliases file
-  if [ ! -f ".ddev/homeadditions/.bash_aliases"  ]; then
-    # copy file
-    cat .ddev/homeadditions/bash_aliases.example > .ddev/homeadditions/.bash_aliases
-    # write to file
-    cat >> .ddev/homeadditions/.bash_aliases << 'config'
-alias magento="bin/compile.sh"
-alias m="bin/magento"
-alias composer1="composer self-update --1"
-alias composer2="composer self-update --2"
-alias mdev="bin/magento deploy:mode:set developer"
-alias mclean="bin/magento cache:clean"
-alias mflush="bin/magento cache:flush"
-alias mdeploy="bin/magento setup:static-content:deploy -f da_DK"
-alias mcompile="bin/magento setup:di:compile"
-alias mupgrade="bin/magento setup:upgrade"
-alias mindexer="bin/magento indexer:reindex"
-config
-  fi
+  sleep 2
 
   # Create DDEV elasticsearch if not already added
   if [ ! -f ".ddev/docker-compose.elasticsearch.yaml" ]; then
@@ -101,6 +106,34 @@ config
 
     message "Docker-compose.elasticsearch.yaml added"
   fi
+
+  # Let ddev create some base folders
+  ddev start
+  sleep 15
+  ddev stop
+
+
+  # Copy aliases file
+  if [ ! -f ".ddev/homeadditions/.bash_aliases"  ]; then
+    # copy file
+    cat .ddev/homeadditions/bash_aliases.example > .ddev/homeadditions/.bash_aliases
+    # write to file
+    cat >> .ddev/homeadditions/.bash_aliases << 'config'
+alias magento="bin/compile.sh"
+alias m="bin/magento"
+alias composer1="composer self-update --1"
+alias composer2="composer self-update --2"
+alias mdev="bin/magento deploy:mode:set developer"
+alias mclean="bin/magento cache:clean"
+alias mflush="bin/magento cache:flush"
+alias mdeploy="bin/magento setup:static-content:deploy -f da_DK"
+alias mcompile="bin/magento setup:di:compile"
+alias mupgrade="bin/magento setup:upgrade"
+alias mindexer="bin/magento indexer:reindex"
+config
+  fi
+
+
 fi
 
 # Setup Mutagen & Run DDEV
@@ -109,11 +142,11 @@ if [ -d ".ddev" ]; then
     # check if mutagen is installed
     if [ ! -f ".ddev/commands/host/mutagen" ]; then
       message "Setting up mutagen sync script in current ddev project"
-      curl https://raw.githubusercontent.com/williamengbjerg/ddev-mutagen/master/setup.sh | bash
+      # curl https://raw.githubusercontent.com/williamengbjerg/ddev-mutagen/master/setup.sh | bash
     fi
 
     # Run DDEV project in Docker
     message "Running DDEV"
-    ddev start
+    # ddev start
 fi
 
