@@ -3,27 +3,28 @@
 # from github repo
 GITHUB=https://raw.githubusercontent.com/websnack-dk/magento/main/
 
-# YELLOW="33"
-# BOLD_YELLOW="\e[1;${YELLOW}m"
-# END_COLOR="\e[0m"
-
 COLOR_REST="$(tput sgr0)"
 COLOR_GREEN="$(tput setaf 2)"
+COLOR_RED="$(tput setaf 1)"
+COLOR_YELLOW="$(tput setaf 3)"
+COLOR_BLUE="$(tput setaf 4)"
 
-# Output message
-function message() {
-  message=$1
-  printf '%s%s\n' " $COLOR_GREEN ${message} $COLOR_REST"
-}
-
-# Check if ddev is installed in system
-if command -v ddev &> /dev/null; then
+# Is docker installed!?
+if ! command -v docker &> /dev/null; then
     # Prompt for auto install or exit
-    read -r -p "DDEV could not be found. $COLOR_GREEN Do you want to install DDEV? (Y/n) $COLOR_REST" answer
+    printf '%s' "$COLOR_RED Docker not found. Install it. $COLOR_REST"
+    echo "$COLOR_BLUE https://docs.docker.com/desktop/ $COLOR_REST"
+    exit 0
+fi
+
+# Check if DDEV is installed in system
+if ! command -v ddev &> /dev/null; then
+    # Prompt for auto install or exit
+    read -r -p "$COLOR_RED DDEV not found.$COLOR_REST $COLOR_GREEN Do you want to install? (Y/n) $COLOR_REST" answer
     case ${answer:0:1} in
       y|Y|Yes )
-          #brew install drud/ddev/ddev
-          message "DDEV has successfully been installed"
+          brew install drud/ddev/ddev
+          printf '%s\n' "$COLOR_GREEN DDEV successfully installed $COLOR_REST"
       ;;
       * )
           exit 1
@@ -31,38 +32,38 @@ if command -v ddev &> /dev/null; then
     esac
 fi
 
-exit 1
-
 #
 # Automatically configures magento2 project with mutagen sync & DDEV
 #
 
-# Copy helper files into magento bin folder
-# Stop process if directory doesn't exist
+# Copy helper-files into magento bin folder
 if [ ! -d "bin" ]; then
-  message "[!] Folder [bin] does not exist. Make sure Magento2 project is installed"
-  exit 1
+  printf '%s\n' "$COLOR_RED [!] Bin folder does not exist. Make sure Magento2 project is installed $COLOR_REST"
+  exit 0
 else
-  message "Downloading helper files"
-  curl -s "$GITHUB"helpers/compile.sh?token=AAANLP447X33DZJGDPR35QTAWDZPW --output bin/compile.sh --silent
-  curl -s "$GITHUB"helpers/helpers.sh?token=AAANLP6EF7XPVPYA7UDHYPDAWDZOS --output bin/helpers.sh --silent
-  curl -s "$GITHUB"helpers/func.sh?token=AAANLPZ5E6DZPP4DLY5JLQLAWDZXW    --output bin/func.sh --silent
+  # Copy files from github
+  printf '%s\n' "$COLOR_YELLOW Downloading helper files $COLOR_REST"
+  curl -s "$GITHUB"helpers/compile.sh --output bin/compile.sh --silent
+  curl -s "$GITHUB"helpers/helpers.sh --output bin/helpers.sh --silent
+  curl -s "$GITHUB"helpers/func.sh    --output bin/func.sh    --silent
+
   # make files executable
   chmod +x bin/helpers.sh && chmod +x bin/compile.sh
-  message "Helper files downloaded to bin folder"
+  printf '%s\n' "$COLOR_GREEN Helper files downloaded to bin folder $COLOR_REST"
 fi
 
 
 # Check if DDEV directory exist
 if [ ! -d ".ddev" ]; then
-  message "[!] DDEV folder does not appear to be in the project."
+
+  printf '%s\n' "$COLOR_RED [!] .ddev folder does not appear to be in the project. $COLOR_REST"
 
   # Prompt for auto install or exit
-  read -r -p "Do you want to setup .ddev folders? (y/n) " answer
+  read -r -p "$COLOR_GREEN Run ddev config setup? (y/n) $COLOR_REST" answer
   case ${answer:0:1} in
     y|Y|Yes )
         ddev config --project-type=magento2 --docroot=pub --create-docroot
-        message ".ddev folder created"
+        printf '%s\n' "$COLOR_GREEN .ddev folder created $COLOR_REST"
     ;;
     * )
         exit 1
@@ -104,14 +105,14 @@ if [ ! -d ".ddev" ]; then
         echo -e "   elasticsearch:"
     } > .ddev/docker-compose.elasticsearch.yaml
 
-    message "Docker-compose.elasticsearch.yaml added"
+    printf '%s\n' "$COLOR_GREEN Docker-compose.elasticsearch.yaml added $COLOR_REST"
   fi
 
   # Let ddev create some base folders
   ddev start
-  sleep 15
+  sleep 2
+  printf '%s\n' "$COLOR_YELLOW Stopping DDEV $COLOR_REST"
   ddev stop
-
 
   # Copy aliases file
   if [ ! -f ".ddev/homeadditions/.bash_aliases"  ]; then
@@ -133,20 +134,20 @@ alias mindexer="bin/magento indexer:reindex"
 config
   fi
 
-
 fi
 
 # Setup Mutagen & Run DDEV
 if [ -d ".ddev" ]; then
 
-    # check if mutagen is installed
+    # Setup mutagen if not already set
     if [ ! -f ".ddev/commands/host/mutagen" ]; then
-      message "Setting up mutagen sync script in current ddev project"
-      # curl https://raw.githubusercontent.com/williamengbjerg/ddev-mutagen/master/setup.sh | bash
+      printf '%s\n' "$COLOR_YELLOW Setting up mutagen sync script in current ddev project $COLOR_REST"
+      curl https://raw.githubusercontent.com/williamengbjerg/ddev-mutagen/master/setup.sh | bash
     fi
 
     # Run DDEV project in Docker
-    message "Running DDEV"
-    # ddev start
-fi
+    printf '%s\n' "$COLOR_YELLOW Starting ddev project $COLOR_REST"
+    ddev start
 
+    printf '%s\n' "$COLOR_GREEN Setup done. Happy coding :) $COLOR_REST"
+fi
