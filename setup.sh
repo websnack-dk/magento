@@ -14,7 +14,7 @@ if ! command -v docker &> /dev/null; then
     # Prompt for auto install or exit
     printf '%s' "$COLOR_RED Docker not found. Install it. $COLOR_REST"
     echo "$COLOR_BLUE https://docs.docker.com/desktop/ $COLOR_REST"
-    exit 0
+    exit 1
 fi
 
 # Check if DDEV is installed in system
@@ -39,7 +39,6 @@ fi
 # Copy helper-files into magento bin folder
 if [ ! -d "bin" ]; then
   printf '%s\n' "$COLOR_RED [!] Bin folder does not exist. Make sure Magento2 project is installed $COLOR_REST"
-  exit 0
 else
   # Copy files from github
   printf '%s\n' "$COLOR_YELLOW Downloading helper files $COLOR_REST"
@@ -48,15 +47,17 @@ else
   curl -s "$GITHUB"helpers/func.sh    --output bin/func.sh    --silent
 
   # make files executable
-  chmod +x bin/helpers.sh && chmod +x bin/compile.sh
+  chmod +x bin/helpers.sh
+  chmod +x bin/compile.sh
+  chmod +x bin/func.sh
   printf '%s\n' "$COLOR_GREEN Helper files downloaded to bin folder $COLOR_REST"
 fi
-
 
 # Check if DDEV directory exist
 if [ ! -d ".ddev" ]; then
 
   printf '%s\n' "$COLOR_RED [!] .ddev folder does not appear to be in the project. $COLOR_REST"
+  sleep 1
 
   # Prompt for auto install or exit
   read -r -p "$COLOR_GREEN Run ddev config setup? (y/n) $COLOR_REST" answer
