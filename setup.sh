@@ -3,8 +3,14 @@
 # from github repo
 GITHUB=https://raw.githubusercontent.com/websnack-dk/magento/main/
 
-# shellcheck source=./helpers/func.sh
-source <(curl -s -O $GITHUB/helpers/func.sh)
+if [ ! -d "bin" ] && [ ! -f "bin/func.sh" ]; then
+  curl -s "$GITHUB/helpers/func.sh" > bin/func.sh
+else
+    # shellcheck source=./helpers/func.sh
+    source <(curl -s -O "$GITHUB/helpers/func.sh")
+fi
+
+exit 1
 
 #
 # Automatically configures magento2 project with mutagen sync & DDEV
@@ -17,8 +23,8 @@ if [ ! -d "bin" ]; then
   exit 1
 else
   message "Downloading helper files"
-  curl -s $GITHUB/helpers/compile.sh > bin/compile.sh
-  curl -s $GITHUB/helpers/helpers.sh > bin/helpers.sh
+  curl -s "$GITHUB/helpers/compile.sh" > bin/compile.sh
+  curl -s "$GITHUB/helpers/helpers.sh" > bin/helpers.sh
   # make files executable
   chmod +x bin/helpers && chmod +x bin/compile
   message "Helper files downloaded to bin folder"
