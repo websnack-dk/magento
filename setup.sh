@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # from github repo
-GITHUB=https://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@raw.githubusercontent.com/websnack-dk/magento/main/
+GITHUB=https://raw.githubusercontent.com/websnack-dk/magento/main/
 
 # shellcheck source=./helpers/func.sh
 source <(curl -s -O $GITHUB/helpers/func.sh)
