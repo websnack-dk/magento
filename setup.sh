@@ -17,8 +17,8 @@ if [ ! -d "bin" ]; then
   exit 1
 else
   message "Downloading helper files"
-  curl -s $GITHUB/compile.sh > bin/compile.sh
-  curl -s $GITHUB/helpers.sh > bin/helpers.sh
+  curl -s $GITHUB/helpers/compile.sh > bin/compile.sh
+  curl -s $GITHUB/helpers/helpers.sh > bin/helpers.sh
   # make files executable
   chmod +x bin/helpers && chmod +x bin/compile
   message "Helper files downloaded to bin folder"
