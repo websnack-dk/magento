@@ -1,4 +1,4 @@
-## Setup Magento2 project with DDEV & Mutagen 
+# Setup Magento2 project with DDEV & Mutagen 
 
 The script only works on an existing Magento2 project.
 Everything will be automatic installed if prompt accepted.
