@@ -1,27 +1,29 @@
-# Setup Magento2 project with Mutagen &amp; DDEV
+## Setup Magento2 project with DDEV & Mutagen 
 
-Bash script to automatic setup DDEV & Mutagen on an existing Magento2 project.
+The script only works on an existing Magento2 project.
+Everything will be automatic installed if prompt accepted.
 
-Automatic adds:
-- Elasticsearch for Docker
-- .bash_aliases
+The setup has Only been tested on Apple Silicon M1.
 
 ## Requirements 
-- [Magento2](https://github.com/magento/magento2) - Only works on existing projects
-- [Docker Desktop](https://docs.docker.com/docker-for-mac/apple-m1/) for Apple Silicon. - Only tested on M1.
-- [DDEV-local](https://ddev.readthedocs.io/en/stable/) installed via Homebrew
+
+- [Magento2](https://github.com/magento/magento2) 
+- [Docker Desktop](https://docs.docker.com/docker-for-mac/apple-m1/)
+- [DDEV-local](https://ddev.readthedocs.io/en/stable/)
+    - [Elasticsearch](https://www.elastic.co/)
+- [Mutagen](https://mutagen.io/)
 
 ---
 
 ## Usage
-Paste curl-url in terminal and enjoy.
+Copy paste curl and enjoy ☕
 ```bash 
 curl https://raw.githubusercontent.com/websnack-dk/magento/main/setup.sh | bash
 ```
 --- 
 
-## Shell helpers
-SSH into ddev web-container and use commands below. 
+## Helpers
+SSH into web-container and use shortcut-commands below. 
 
 ```html
 ---- multiply commands ---- 
