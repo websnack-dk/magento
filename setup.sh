@@ -57,21 +57,9 @@ fi
 if [ ! -d ".ddev" ]; then
 
   printf '%s\n' "$COLOR_RED [!] .ddev folder does not appear to be in the project. $COLOR_REST"
+  ddev config --project-type=magento2 --docroot=pub --create-docroot
+  printf '%s\n' "$COLOR_GREEN .ddev folder created $COLOR_REST"
   sleep 1
-
-  # Prompt for auto install or exit
-  read -r -p "$COLOR_GREEN Run ddev config setup? (y/n) $COLOR_REST" answer
-  case ${answer:0:1} in
-    y|Y|Yes )
-        ddev config --project-type=magento2 --docroot=pub --create-docroot
-        printf '%s\n' "$COLOR_GREEN .ddev folder created $COLOR_REST"
-    ;;
-    * )
-        exit 1
-    ;;
-  esac
-
-  sleep 2
 
   # Create DDEV elasticsearch if not already added
   if [ ! -f ".ddev/docker-compose.elasticsearch.yaml" ]; then
