@@ -25,6 +25,7 @@ if ! command -v ddev &> /dev/null; then
       y|Y|Yes )
           brew install drud/ddev/ddev
           printf '%s\n' "$COLOR_GREEN DDEV successfully installed $COLOR_REST"
+          exit 0
       ;;
       * )
           exit 1
@@ -39,6 +40,7 @@ fi
 # Copy helper-files into magento bin folder
 if [ ! -d "bin" ]; then
   printf '%s\n' "$COLOR_RED [!] Bin folder does not exist. Make sure Magento2 project is installed $COLOR_REST"
+  exit 1
 else
   # Copy files from github
   printf '%s\n' "$COLOR_YELLOW Downloading helper files $COLOR_REST"
@@ -51,15 +53,18 @@ else
   chmod +x bin/compile.sh
   chmod +x bin/func.sh
   printf '%s\n' "$COLOR_GREEN Helper files downloaded to bin folder $COLOR_REST"
+  exit 0
 fi
 
 # Check if DDEV directory exist
 if [ ! -d ".ddev" ]; then
 
   printf '%s\n' "$COLOR_RED [!] .ddev folder does not appear to be in the project. $COLOR_REST"
+  sleep 1
+
+  printf '%s\n' "$COLOR_YELLOW Creating .ddev folder $COLOR_REST"
   ddev config --project-type=magento2 --docroot=pub --create-docroot
   printf '%s\n' "$COLOR_GREEN .ddev folder created $COLOR_REST"
-  sleep 1
 
   # Create DDEV elasticsearch if not already added
   if [ ! -f ".ddev/docker-compose.elasticsearch.yaml" ]; then
@@ -95,6 +100,7 @@ if [ ! -d ".ddev" ]; then
     } > .ddev/docker-compose.elasticsearch.yaml
 
     printf '%s\n' "$COLOR_GREEN Docker-compose.elasticsearch.yaml added $COLOR_REST"
+    exit 0
   fi
 
   # Let ddev create some base folders
@@ -121,6 +127,7 @@ alias mcompile="bin/magento setup:di:compile"
 alias mupgrade="bin/magento setup:upgrade"
 alias mindexer="bin/magento indexer:reindex"
 config
+  exit 0
   fi
 
 fi
