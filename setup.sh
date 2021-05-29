@@ -25,7 +25,6 @@ if ! command -v ddev &> /dev/null; then
       y|Y|Yes )
           brew install drud/ddev/ddev
           printf '%s\n' "$COLOR_GREEN DDEV successfully installed $COLOR_REST"
-          exit 0
       ;;
       * )
           exit 1
@@ -53,7 +52,6 @@ else
   chmod +x bin/compile.sh
   chmod +x bin/func.sh
   printf '%s\n' "$COLOR_GREEN Helper files downloaded to bin folder $COLOR_REST"
-  exit 0
 fi
 
 # Check if DDEV directory exist
@@ -100,7 +98,6 @@ if [ ! -d ".ddev" ]; then
     } > .ddev/docker-compose.elasticsearch.yaml
 
     printf '%s\n' "$COLOR_GREEN Docker-compose.elasticsearch.yaml added $COLOR_REST"
-    exit 0
   fi
 
   # Let ddev create some base folders
@@ -127,7 +124,6 @@ alias mcompile="bin/magento setup:di:compile"
 alias mupgrade="bin/magento setup:upgrade"
 alias mindexer="bin/magento indexer:reindex"
 config
-  exit 0
   fi
 
 fi
