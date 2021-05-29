@@ -37,29 +37,33 @@ fi
 #
 
 # Copy helper-files into magento bin folder
-if [ ! -d "bin" ]; then
-  printf '%s\n' "$COLOR_RED [!] Bin folder does not exist. Make sure Magento2 project is installed $COLOR_REST"
-else
-  # Copy files from github
-  printf '%s\n' "$COLOR_YELLOW Downloading helper files $COLOR_REST"
-  curl -s "$GITHUB"helpers/compile.sh --output bin/compile.sh --silent
-  curl -s "$GITHUB"helpers/helpers.sh --output bin/helpers.sh --silent
-  curl -s "$GITHUB"helpers/func.sh    --output bin/func.sh    --silent
 
-  # make files executable
-  chmod +x bin/helpers.sh
-  chmod +x bin/compile.sh
-  chmod +x bin/func.sh
-  printf '%s\n' "$COLOR_GREEN Helper files downloaded to bin folder $COLOR_REST"
+if [ ! -d "bin" ]; then
+    printf '%s\n' "$COLOR_RED [!] Bin folder does not exist. Make sure Magento2 project is installed $COLOR_REST"
+    exit 1
 fi
+
+# Copy files from github
+printf '%s\n' "$COLOR_YELLOW Downloading helper files $COLOR_REST"
+curl -s "$GITHUB"helpers/compile.sh --output bin/compile.sh --silent
+curl -s "$GITHUB"helpers/helpers.sh --output bin/helpers.sh --silent
+curl -s "$GITHUB"helpers/func.sh    --output bin/func.sh    --silent
+
+# make files executable
+chmod +x bin/helpers.sh
+chmod +x bin/compile.sh
+chmod +x bin/func.sh
+printf '%s\n' "$COLOR_GREEN Helper files downloaded to bin folder $COLOR_REST"
 
 # Check if DDEV directory exist
 if [ ! -d ".ddev" ]; then
 
   printf '%s\n' "$COLOR_RED [!] .ddev folder does not appear to be in the project. $COLOR_REST"
+  sleep 1
+
+  printf '%s\n' "$COLOR_YELLOW Creating .ddev folder $COLOR_REST"
   ddev config --project-type=magento2 --docroot=pub --create-docroot
   printf '%s\n' "$COLOR_GREEN .ddev folder created $COLOR_REST"
-  sleep 1
 
   # Create DDEV elasticsearch if not already added
   if [ ! -f ".ddev/docker-compose.elasticsearch.yaml" ]; then
