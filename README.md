@@ -1,9 +1,8 @@
 # Setup Magento2 project with DDEV & Mutagen 
 
-The script only works on an existing Magento2 project.
-Everything will be automatic installed if prompt accepted.
+Bash script only works on existing Magento2 projects. Requiments below will automatic be installed. Except Docker Desktop.
 
-The setup has Only been tested on Apple Silicon M1.
+The setup has only been tested on Apple Silicon M1.
 
 ## Requirements 
 
@@ -16,7 +15,7 @@ The setup has Only been tested on Apple Silicon M1.
 ---
 
 ## Usage
-Copy paste curl and enjoy ☕
+First cd into an existing magento2 project. Copy, paste curl-command below and enjoy ☕
 ```bash 
 curl https://raw.githubusercontent.com/websnack-dk/magento/main/setup.sh | bash
 ```
@@ -32,7 +31,7 @@ magento composer    => Install or upgrade (base) composer packages
 magento deploy      => Enables all modules, except Magento_Csp & Magento_TwoFactorAuth & Runs base setup 
 magento rebuild     => Re-compiling all files: Clean, Flush, Upgrade, di:compile & static-content:deploy da_DK  
 magento clean       => Compile Clean/Flush & Run static-content:deploy da_DK 
-magento tailwind    => Compile css file, remove generated folders & Clean/flush (Requires some setup in order to work)
+magento tailwind    => Compile css file, remove generated folders & Clean/flush (Requires tailwind setup in order to work)
 magento magerun     => Export SQL via. magerun2 and removes n98-magerun2.phar
 
 
