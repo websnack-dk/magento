@@ -15,8 +15,8 @@ The setup has only been tested on Apple Silicon M1.
 ---
 
 ## Usage
-First cd into an existing magento2 project. Copy, paste curl-command below and enjoy ☕
-```bash 
+Cd into an existing magento2 project from term. Copy, paste curl-command below and enjoy ☕
+```bash
 curl https://raw.githubusercontent.com/websnack-dk/magento/main/setup.sh | bash
 ```
 --- 
@@ -49,7 +49,24 @@ mupgrade            => bin/magento setup:upgrade
 mindexer            => bin/magento indexer:reindex
 ```
 
---- 
+---
+
+## Watcher: Observe file changes
+ssh into web-container and into folder Watcher.
+Make sure to install pip3 in docker web-container (inside folder, Watcher). Change path & observers in`Watcher/Watcher.py`  
+
+```bash
+sudo pip3 install virtualenv  # Setup virtualenv
+
+source venv/bin/activate      # Activate 
+```
+
+Observe file changes
+```bash
+python Watcher.py
+```
+
+---
 
 ### Maintainer
 

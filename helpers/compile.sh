@@ -75,6 +75,14 @@ elif [ "$1" == "rebuild" ]; then
   message "Files Has Been Re-build"
 
 ## Compile LESS-files
+elif [ "$1" == "flush_cache" ]; then
+
+  message "Clearing & Flushing files.."
+  remove_folders
+  bin/magento cache:clean
+  bin/magento cache:flush
+  message "Finished..."
+
 elif [ "$1" == "tailwind" ]; then
 
   # remove generated folders
