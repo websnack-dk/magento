@@ -142,8 +142,10 @@ config
     printf '%s\n' "$COLOR_GREEN Dockerfile added in web-build $COLOR_REST"
 
     # Add watch script
-    if [ ! -f "Watcher/Watcher.py" ]; then
-      curl -s "$GITHUB"Watcher/Watcher.py --output Watcher/Watcher.py --silent
+    if [ -d "Watcher" ]; then
+      curl -s "$GITHUB"Watcher/Watcher.py -o Watcher/Watcher.py --create-dirs
+      # make files executable
+      chmod +x Watcher/Watcher.py
       printf '%s\n' "$COLOR_GREEN Custom watcher added in Watcher/Watcher.py $COLOR_REST"
     fi
 
