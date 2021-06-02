@@ -37,7 +37,6 @@ fi
 #
 
 # Copy helper-files into magento bin folder
-
 if [ ! -d "bin" ]; then
     printf '%s\n' "$COLOR_RED [!] Bin folder does not exist. Make sure Magento2 project is installed $COLOR_REST"
     exit 1
@@ -101,6 +100,7 @@ if [ ! -d ".ddev" ]; then
     printf '%s\n' "$COLOR_GREEN Docker-compose.elasticsearch.yaml added $COLOR_REST"
   fi
 
+
   # Let ddev create some base folders
   ddev start
   sleep 2
@@ -125,6 +125,28 @@ alias mcompile="bin/magento setup:di:compile"
 alias mupgrade="bin/magento setup:upgrade"
 alias mindexer="bin/magento indexer:reindex"
 config
+  fi
+
+  # Install pip3 from dockerfile
+  if [[ -d ".ddev/web-build" && -f ".ddev/web-build/Dockerfile.example" ]]; then
+    # copy file
+    cat .ddev/web-build/Dockerfile.example > .ddev/web-build/Dockerfile
+    # write to file
+    cat >> .ddev/web-build/Dockerfile << 'config'
+
+# Install pip3
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y -o Dpkg::Options::="--force-confnew" --no-install-recommends --no-install-suggests python3-pip python3-setuptools
+RUN pip3
+config
+
+    printf '%s\n' "$COLOR_GREEN Dockerfile added in web-build $COLOR_REST"
+
+    # Add watch script
+    if [ ! -f "Watcher/Watcher.py" ]; then
+      curl -s "$GITHUB"Watcher/Watcher.py --output Watcher/Watcher.py --silent
+      printf '%s\n' "$COLOR_GREEN Custom watcher added in Watcher/Watcher.py $COLOR_REST"
+    fi
+
   fi
 
 fi
