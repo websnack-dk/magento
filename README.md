@@ -16,7 +16,7 @@ The setup has only been tested on Apple Silicon M1.
 
 ## Usage
 Cd into an existing magento2 project from term. Copy, paste curl-command below and enjoy ☕
-```bash
+```bashpro shell script
 curl https://raw.githubusercontent.com/websnack-dk/magento/main/setup.sh | bash
 ```
 --- 
@@ -24,8 +24,8 @@ curl https://raw.githubusercontent.com/websnack-dk/magento/main/setup.sh | bash
 ## Helpers
 SSH into web-container and use shortcut-commands below
 
-```text
----- Custom commands ---- 
+```bashpro shell script
+# ---- Custom commands ---- 
 
 magento composer    => Install or upgrade (base) composer packages  
 magento deploy      => Enables all modules, except Magento_Csp & Magento_TwoFactorAuth & Runs base setup 
@@ -35,7 +35,7 @@ magento tailwind    => Compile css file, remove generated folders & Clean/flush 
 magento magerun     => Export SQL via. magerun2 and removes n98-magerun2.phar
 
 
----- Base Magento2 Shortcuts ----
+# ---- Base Magento2 Shortcuts ----
 
 m                   => bin/magento 
 composer1           => composer self-update --1
@@ -53,18 +53,15 @@ mindexer            => bin/magento indexer:reindex
 
 ## Observe file changes
   
-`ddev ssh` to Watcher-folder.   
-Change file observers in `Watcher/Watcher.py`.  
+Use an external term for watcher. `ddev ssh` to Watcher-folder.   
 Standard observation files `.phtml` files in `app/frontend/design/Magento_Theme/templates/html`
 
-```bash
-cd Watcher/ && source venv/bin/activate && pip3 install watchdog
-```
+Observe files:
 
-Observe files
-```bash
-python Watcher.py
+```bashpro shell script
+cd Watcher/ && source venv/bin/activate && pip3 install watchdog && python Watcher.py 
 ```
+Change file observers in `Watcher/Watcher.py`
 
 ---
 
