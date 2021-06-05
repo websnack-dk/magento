@@ -145,13 +145,8 @@ if [ -d ".ddev" ]; then
 
     if [ ! -f ".ddev/commands/web/observer" ]; then
 
-      # Create dir if not existing
-      if [ ! -d ".ddev/commands/web" ]; then
-          mkdir -p .ddev/commands/web # create parent/subfolder
-      fi
-
       printf '%s\n' "$COLOR_BLUE [!] Adding observer setup $COLOR_REST"
-      curl -s "$GITHUB"helpers/observer --output .ddev/commands/web/observer
+      curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/observer --output .ddev/commands/web/observer --create-dirs
       ddev observer
       printf '%s\n' "$COLOR_GREEN Virtualenv has been setup $COLOR_REST"
     fi
