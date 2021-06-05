@@ -58,8 +58,6 @@ printf '%s\n' "$COLOR_GREEN Helper files downloaded to bin folder $COLOR_REST"
 if [ ! -d ".ddev" ]; then
 
   printf '%s\n' "$COLOR_RED .ddev folder does not appear to be in the project. $COLOR_REST"
-  sleep 1
-
   printf '%s\n' "$COLOR_BLUE Creating .ddev folder $COLOR_REST"
   ddev config --project-type=magento2 --docroot=pub --create-docroot
   printf '%s\n' "$COLOR_GREEN .ddev folder created $COLOR_REST"
@@ -102,16 +100,17 @@ if [ ! -d ".ddev" ]; then
 
 
   # Let ddev create some base folders
-  ddev start
-  sleep 1
-  printf '%s\n' "$COLOR_BLUE Stopping DDEV $COLOR_REST"
-  ddev stop
+  printf '%s\n' "$COLOR_GREEN .bash_aliases created $COLOR_REST"
+  mkdir .ddev/homeadditions/ || exit 0
+  touch .ddev/homeadditions/.bash_aliases
 
   # Copy aliases file
   if [ ! -f ".ddev/homeadditions/.bash_aliases"  ]; then
+
     # copy file
-    cat .ddev/homeadditions/bash_aliases.example > .ddev/homeadditions/.bash_aliases
-    # write to file
+    # cat .ddev/homeadditions/bash_aliases.example > .ddev/homeadditions/.bash_aliases
+
+    # write to .bash_aliases
     cat >> .ddev/homeadditions/.bash_aliases << 'config'
 alias magento="bin/compile.sh"
 alias m="bin/magento"
@@ -158,8 +157,6 @@ if [ -d ".ddev" ]; then
     printf '%s\n' "$COLOR_YELLOW Starting ddev project $COLOR_REST"
     ddev start
 
-    sleep 1
-
     printf '%s\n' "$COLOR_BLUE [!] Adding observer setup $COLOR_REST"
 
     # Add watcher script
@@ -171,7 +168,7 @@ if [ -d ".ddev" ]; then
         printf '%s\n' "$COLOR_GREEN Custom watcher added in folder Watcher $COLOR_REST"
 
         # Setup file observer
-        ddev . --dir /var/www/html/ "sudo rm -rf venv"
+        # ddev . --dir /var/www/html/ "rm -rf venv"
         ddev . --dir /var/www/html/Watcher "sudo pip3 install watchdog"
         ddev . --dir /var/www/html/Watcher "sudo pip3 install virtualenv"
         ddev . --dir /var/www/html/Watcher "virtualenv -p /usr/bin/python3 venv"
