@@ -22,10 +22,10 @@ curl https://raw.githubusercontent.com/websnack-dk/magento/main/setup.sh | bash
 --- 
 
 ## Helpers
-SSH into web-container and use shortcut-commands below. 
+SSH into web-container and use shortcut-commands below
 
-```html
----- multiply commands ---- 
+```text
+---- Custom commands ---- 
 
 magento composer    => Install or upgrade (base) composer packages  
 magento deploy      => Enables all modules, except Magento_Csp & Magento_TwoFactorAuth & Runs base setup 
@@ -35,7 +35,7 @@ magento tailwind    => Compile css file, remove generated folders & Clean/flush 
 magento magerun     => Export SQL via. magerun2 and removes n98-magerun2.phar
 
 
----- Magento shortcuts ----
+---- Base Magento2 Shortcuts ----
 
 m                   => bin/magento 
 composer1           => composer self-update --1
@@ -51,19 +51,19 @@ mindexer            => bin/magento indexer:reindex
 
 ---
 
-## Watcher: Observe file changes
-ssh into web-container and into folder Watcher.
-Make sure to install pip3 in docker web-container (inside folder, Watcher). Change path & observers in`Watcher/Watcher.py`  
+## Observe file changes
+  
+Change file observers in `Watcher/Watcher.py`.  
+Standard observation files `.phtml` files in `app/frontend/design/Magento_Theme`
 
 ```bash
-sudo pip3 install virtualenv  # Setup virtualenv
-
-source venv/bin/activate      # Activate 
+cd Watcher/
+source venv/bin/activate
 ```
 
-Observe file changes
+Observe files
 ```bash
-python Watcher.py
+python Watcher.p
 ```
 
 ---

@@ -144,23 +144,22 @@ config
 
     printf '%s\n' "$COLOR_GREEN Dockerfile added in web-build $COLOR_REST"
 
-    # Add watch script
-    if [[ ! -d "$WATCHER_DIR" && ! -f "$WATCHER_DIR/Watcher.py" ]]; then
+    # Add watcher script
+    if [[ ! -d "Watcher" && ! -f "Watcher/Watcher.py" ]]; then
+        curl -s "$GITHUB"+Watcher/Watcher.py -o Watcher/Watcher.py --create-dirs
+        # make files executable
+        chmod +x Watcher/Watcher.py
 
-      curl -s "$GITHUB"+"$WATCHER_DIR"/Watcher.py -o "$WATCHER_DIR"/Watcher.py --create-dirs
-      # make files executable
-      chmod +x $WATCHER_DIR/Watcher.py
+        printf '%s\n' "$COLOR_GREEN Custom watcher added in folder Watcher $COLOR_REST"
 
-      printf '%s\n' "$COLOR_GREEN Custom watcher added in folder Watcher $COLOR_REST"
-
-      # Setup file observer
-      ddev exec --dir $WWW_DIR rm -rf venv
-      ddev exec --dir $WWW_DIR sudo pip3 install virtualenv
-      ddev exec --dir $WATCHER_DIR virtualenv -p /usr/bin/python3 venv
-      ddev exec --dir $WATCHER_DIR source venv/bin/activate
-      ddev exec --dir $WATCHER_DIR python Watcher.py
-      printf '%s\n' "$COLOR_GREEN Virtualenv has been setup $COLOR_REST"
-
+        # Setup file observer
+        ddev exec --dir $WWW_DIR rm -rf venv
+        ddev exec --dir $WATCHER_DIR pip3 install watchdog
+        ddev exec --dir $WWW_DIR sudo pip3 install virtualenv
+        ddev exec --dir $WATCHER_DIR virtualenv -p /usr/bin/python3 venv
+        ddev exec --dir $WATCHER_DIR source venv/bin/activate
+        ddev exec --dir $WATCHER_DIR python Watcher.py
+        printf '%s\n' "$COLOR_GREEN Virtualenv has been setup $COLOR_REST"
     fi
 
   fi
@@ -180,5 +179,4 @@ if [ -d ".ddev" ]; then
     printf '%s\n' "$COLOR_YELLOW Starting ddev project $COLOR_REST"
     ddev start
 
-    printf '%s\n' "$COLOR_GREEN Setup done. Happy coding :) $COLOR_REST"
 fi
