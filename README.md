@@ -1,10 +1,14 @@
-# Setup Magento2 project with DDEV & Mutagen 
+# Single Curl-Command to setup Magento2, Elasticsearch, DDEV & Mutagen.
 
-Bash script only works on existing Magento2 projects. Requiments below will automatic be installed. Except Docker Desktop.
+### Bash script only works on existing Magento2 projects.
+#### Setup has only been tested on Apple Silicon M1
 
-The setup has only been tested on Apple Silicon M1.
+---
 
-## Requirements 
+Requirements will automatic be installed.  
+Except Docker Desktop
+
+### Requirements
 
 - [Magento2](https://github.com/magento/magento2) 
 - [Docker Desktop](https://docs.docker.com/docker-for-mac/apple-m1/)
@@ -16,16 +20,16 @@ The setup has only been tested on Apple Silicon M1.
 
 ## Usage
 Cd into an existing magento2 project from term. Copy, paste curl-command below and enjoy ☕
-```bash
+```bashpro shell script
 curl https://raw.githubusercontent.com/websnack-dk/magento/main/setup.sh | bash
 ```
 --- 
 
 ## Helpers
-SSH into web-container and use shortcut-commands below. 
+SSH into web-container and use shortcut-commands below
 
-```html
----- multiply commands ---- 
+```bashpro shell script
+# ---- Custom commands ---- 
 
 magento composer    => Install or upgrade (base) composer packages  
 magento deploy      => Enables all modules, except Magento_Csp & Magento_TwoFactorAuth & Runs base setup 
@@ -35,7 +39,7 @@ magento tailwind    => Compile css file, remove generated folders & Clean/flush 
 magento magerun     => Export SQL via. magerun2 and removes n98-magerun2.phar
 
 
----- Magento shortcuts ----
+# ---- Base Magento2 Shortcuts ----
 
 m                   => bin/magento 
 composer1           => composer self-update --1
@@ -51,20 +55,21 @@ mindexer            => bin/magento indexer:reindex
 
 ---
 
-## Watcher: Observe file changes
-ssh into web-container and into folder Watcher.
-Make sure to install pip3 in docker web-container (inside folder, Watcher). Change path & observers in`Watcher/Watcher.py`  
+## Observe file changes
+  
+Standard observation files `.phtml` files in `app/frontend/design/Magento_Theme/templates/html`
 
-```bash
-sudo pip3 install virtualenv  # Setup virtualenv
+Observe files:  
+Use an external term for watcher. `ddev ssh` to Watcher-folder.   
 
-source venv/bin/activate      # Activate 
+```bashpro shell script
+cd Watcher/ && source venv/bin/activate && python3 -m pip install watchdog
 ```
 
-Observe file changes
-```bash
+```bashpro shell script
 python Watcher.py
 ```
+Change file observers in `Watcher/Watcher.py`
 
 ---
 

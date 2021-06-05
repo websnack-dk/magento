@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # from github repo
-GITHUB=https://raw.githubusercontent.com/websnack-dk/magento/main/
+GITHUB=https://github.com/websnack-dk/magento/
 
 COLOR_REST="$(tput sgr0)"
 COLOR_GREEN="$(tput setaf 2)"
@@ -38,12 +38,12 @@ fi
 
 # Copy helper-files into magento bin folder
 if [ ! -d "bin" ]; then
-    printf '%s\n' "$COLOR_RED [!] Bin folder does not exist. Make sure Magento2 project is installed $COLOR_REST"
+    printf '%s\n' "$COLOR_RED Bin folder does not exist. Make sure Magento2 project is installed $COLOR_REST"
     exit 1
 fi
 
 # Copy files from github
-printf '%s\n' "$COLOR_YELLOW Downloading helper files $COLOR_REST"
+printf '%s\n' "$COLOR_BLUE Downloading helper files $COLOR_REST"
 curl -s "$GITHUB"helpers/compile.sh --output bin/compile.sh --silent
 curl -s "$GITHUB"helpers/helpers.sh --output bin/helpers.sh --silent
 curl -s "$GITHUB"helpers/func.sh    --output bin/func.sh    --silent
@@ -57,10 +57,8 @@ printf '%s\n' "$COLOR_GREEN Helper files downloaded to bin folder $COLOR_REST"
 # Check if DDEV directory exist
 if [ ! -d ".ddev" ]; then
 
-  printf '%s\n' "$COLOR_RED [!] .ddev folder does not appear to be in the project. $COLOR_REST"
-  sleep 1
-
-  printf '%s\n' "$COLOR_YELLOW Creating .ddev folder $COLOR_REST"
+  printf '%s\n' "$COLOR_RED .ddev folder does not appear to be in the project. $COLOR_REST"
+  printf '%s\n' "$COLOR_BLUE Creating .ddev folder $COLOR_REST"
   ddev config --project-type=magento2 --docroot=pub --create-docroot
   printf '%s\n' "$COLOR_GREEN .ddev folder created $COLOR_REST"
 
@@ -102,16 +100,14 @@ if [ ! -d ".ddev" ]; then
 
 
   # Let ddev create some base folders
-  ddev start
-  sleep 2
-  printf '%s\n' "$COLOR_YELLOW Stopping DDEV $COLOR_REST"
-  ddev stop
+  printf '%s\n' "$COLOR_GREEN .bash_aliases created $COLOR_REST"
+  mkdir .ddev/homeadditions/
+  touch .ddev/homeadditions/.bash_aliases
 
   # Copy aliases file
   if [ ! -f ".ddev/homeadditions/.bash_aliases"  ]; then
-    # copy file
-    cat .ddev/homeadditions/bash_aliases.example > .ddev/homeadditions/.bash_aliases
-    # write to file
+
+    # write to .bash_aliases
     cat >> .ddev/homeadditions/.bash_aliases << 'config'
 alias magento="bin/compile.sh"
 alias m="bin/magento"
@@ -140,21 +136,25 @@ RUN pip3
 config
 
     printf '%s\n' "$COLOR_GREEN Dockerfile added in web-build $COLOR_REST"
-
-    # Add watch script
-    if [[ ! -d "Watcher" && ! -f "Watcher/Watcher.py" ]]; then
-      curl -s "$GITHUB"Watcher/Watcher.py -o Watcher/Watcher.py --create-dirs
-      # make files executable
-      chmod +x Watcher/Watcher.py
-      printf '%s\n' "$COLOR_GREEN Custom watcher added in Watcher/Watcher.py $COLOR_REST"
-    fi
-
   fi
 
 fi
 
 # Setup Mutagen & Run DDEV
 if [ -d ".ddev" ]; then
+
+    if [ ! -f ".ddev/commands/web/observer" ]; then
+
+      # Create dir if not existing
+      if [ ! -d ".ddev/commands/web" ]; then
+          mkdir -p .ddev/commands/web # create parent/subfolder
+      fi
+
+      printf '%s\n' "$COLOR_BLUE [!] Adding observer setup $COLOR_REST"
+      curl -s "$GITHUB"helpers/observer --output .ddev/commands/web/observer
+      ddev observer
+      printf '%s\n' "$COLOR_GREEN Virtualenv has been setup $COLOR_REST"
+    fi
 
     # Setup mutagen if not already set
     if [ ! -f ".ddev/commands/host/mutagen" ]; then
@@ -166,5 +166,4 @@ if [ -d ".ddev" ]; then
     printf '%s\n' "$COLOR_YELLOW Starting ddev project $COLOR_REST"
     ddev start
 
-    printf '%s\n' "$COLOR_GREEN Setup done. Happy coding :) $COLOR_REST"
 fi
