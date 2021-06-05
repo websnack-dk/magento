@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # from github repo
-GITHUB=https://raw.githubusercontent.com/websnack-dk/magento/main/
+GITHUB=https://github.com/websnack-dk/magento/
 
 COLOR_REST="$(tput sgr0)"
 COLOR_GREEN="$(tput setaf 2)"
@@ -103,7 +103,6 @@ if [ ! -d ".ddev" ]; then
   printf '%s\n' "$COLOR_GREEN .bash_aliases created $COLOR_REST"
   mkdir .ddev/homeadditions/
   touch .ddev/homeadditions/.bash_aliases
-  touch .ddev/commands/web/observer
 
   # Copy aliases file
   if [ ! -f ".ddev/homeadditions/.bash_aliases"  ]; then
@@ -149,8 +148,15 @@ fi
 if [ -d ".ddev" ]; then
 
     if [ ! -f ".ddev/commands/web/observer" ]; then
+
+      # Create dir if not existing
+      if [ ! -d ".ddev/commands/web" ]; then
+          mkdir -p .ddev/commands/web # parent and subfolders
+      fi
+
       printf '%s\n' "$COLOR_BLUE [!] Adding observer setup $COLOR_REST"
-      curl -s "$GITHUB"helpers/observer --output .ddev/commands/web/observer
+      # curl -s "$GITHUB"helpers/observer --output .ddev/commands/web/observer
+      curl -s https://raw.githubusercontent.com/websnack-dk/magento/feature/shell-03-preinstall-pip3-virtualenv/helpers/observer --output .ddev/commands/web/observer
       printf '%s\n' "$COLOR_GREEN Virtualenv has been setup $COLOR_REST"
     fi
 

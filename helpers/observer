@@ -1,16 +1,13 @@
 #!/bin/bash
 
 # Add watcher script
-if [[ ! -d "Watcher" && ! -f "Watcher/Watcher.py" ]]; then
+curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/Watcher/Watcher.py -o Watcher/Watcher.py --create-dirs
 
-    curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/Watcher/Watcher.py -o Watcher/Watcher.py --create-dirs
+# make files executable
+chmod +x /var/www/html/Watcher/Watcher.py
 
-    # make files executable
-    chmod +x /var/www/html/Watcher/Watcher.py
-
-    # Setup file observer
-    ddev . --dir /var/www/html/Watcher "sudo pip3 install watchdog"
-    ddev . --dir /var/www/html/Watcher "sudo pip3 install virtualenv"
-    ddev . --dir /var/www/html/Watcher "virtualenv -p /usr/bin/python3 venv"
-    ddev . --dir /var/www/html/Watcher "python3 -m pip install watchdog"
-fi
+# Setup file observer
+ddev . --dir /var/www/html/Watcher "sudo pip3 install watchdog"
+ddev . --dir /var/www/html/Watcher "sudo pip3 install virtualenv"
+ddev . --dir /var/www/html/Watcher "virtualenv -p /usr/bin/python3 venv"
+ddev . --dir /var/www/html/Watcher "python3 -m pip install watchdog"
