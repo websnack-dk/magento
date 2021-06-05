@@ -165,9 +165,11 @@ if [ -d ".ddev" ]; then
     # Run DDEV project in Docker
     printf '%s\n' "$COLOR_YELLOW Starting ddev project $COLOR_REST"
 
-    ddev exec rm -rf venv
-    ddev exec cd Watcher/ && ddev exec virtualenv -p /usr/bin/python3 venv && ddev exec source venv/bin/activate
-
+    ddev exec --dir /var/www/ rm -rf venv
+    ddev exec --dir /var/www/ sudo pip3 install virtualenv
+    ddev exec --dir /var/www/html/Watcher/ virtualenv -p /usr/bin/python3 venv
+    ddev exec --dir /var/www/html/Watcher/ source venv/bin/activate
+    ddev exec --dir /var/www/html/Watcher/ python Watcher.py
     ddev start
 
     printf '%s\n' "$COLOR_GREEN Setup done. Happy coding :) $COLOR_REST"
