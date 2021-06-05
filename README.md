@@ -1,10 +1,14 @@
 # Single Curl-Command to setup Magento2, Elasticsearch, DDEV & Mutagen.
 
-Bash script only works on existing Magento2 projects. Requiments below will automatic be installed. Except Docker Desktop.
+### Bash script only works on existing Magento2 projects.
+#### Setup has only been tested on Apple Silicon M1
 
-The setup has only been tested on Apple Silicon M1.
+---
 
-## Requirements 
+Requirements will automatic be installed.  
+Except Docker Desktop
+
+### Requirements
 
 - [Magento2](https://github.com/magento/magento2) 
 - [Docker Desktop](https://docs.docker.com/docker-for-mac/apple-m1/)
@@ -59,11 +63,11 @@ Observe files:
 Use an external term for watcher. `ddev ssh` to Watcher-folder.   
 
 ```bashpro shell script
-cd Watcher/ && source venv/bin/activate && python3 -m pip install watchdog && python Watcher.py
+cd Watcher/ && source venv/bin/activate && python3 -m pip install watchdog
 ```
 
 ```bashpro shell script
-
+python Watcher.py
 ```
 Change file observers in `Watcher/Watcher.py`
 
