@@ -58,10 +58,6 @@ Change file observers in `Watcher/Watcher.py`.
 Standard observation files `.phtml` files in `app/frontend/design/Magento_Theme/templates/html`
 
 ```bash
-virtualenv -p /usr/bin/python3 venv
-```
-
-```bash
 cd Watcher/
 source venv/bin/activate
 ```

@@ -172,11 +172,9 @@ if [ -d ".ddev" ]; then
 
         # Setup file observer
         ddev exec --dir /var/www/html/ sudo rm -rf venv
-        ddev exec --dir /var/www/html/Watcher virtualenv -p /usr/bin/python3 venv
         ddev exec --dir /var/www/html/Watcher python3 -m pip install watchdog
+        ddev exec --dir /var/www/html/Watcher virtualenv -p /usr/bin/python3 venv
         ddev exec --dir /var/www/html/Watcher sudo pip3 install virtualenv
-        ddev exec --dir /var/www/html/Watcher source venv/bin/activate
-        ddev exec --dir /var/www/html/Watcher python Watcher.py
         printf '%s\n' "$COLOR_GREEN Virtualenv has been setup $COLOR_REST"
     fi
 
