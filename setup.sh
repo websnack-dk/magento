@@ -101,8 +101,9 @@ if [ ! -d ".ddev" ]; then
 
   # Let ddev create some base folders
   printf '%s\n' "$COLOR_GREEN .bash_aliases created $COLOR_REST"
-  mkdir .ddev/homeadditions/ || exit 0
+  mkdir .ddev/homeadditions/
   touch .ddev/homeadditions/.bash_aliases
+  touch .ddev/commands/web/observer
 
   # Copy aliases file
   if [ ! -f ".ddev/homeadditions/.bash_aliases"  ]; then
@@ -147,6 +148,12 @@ fi
 # Setup Mutagen & Run DDEV
 if [ -d ".ddev" ]; then
 
+    if [ ! -f ".ddev/commands/web/observer" ]; then
+      printf '%s\n' "$COLOR_BLUE [!] Adding observer setup $COLOR_REST"
+      curl -s "$GITHUB"helpers/observer --output .ddev/commands/web/observer
+      printf '%s\n' "$COLOR_GREEN Virtualenv has been setup $COLOR_REST"
+    fi
+
     # Setup mutagen if not already set
     if [ ! -f ".ddev/commands/host/mutagen" ]; then
       printf '%s\n' "$COLOR_YELLOW Setting up mutagen sync script in current ddev project $COLOR_REST"
@@ -156,27 +163,5 @@ if [ -d ".ddev" ]; then
     # Run DDEV project in Docker
     printf '%s\n' "$COLOR_YELLOW Starting ddev project $COLOR_REST"
     ddev start
-
-    printf '%s\n' "$COLOR_BLUE [!] Adding observer setup $COLOR_REST"
-
-    # Add watcher script
-    if [[ ! -d "Watcher" && ! -f "Watcher/Watcher.py" ]]; then
-        curl -s "$GITHUB"Watcher/Watcher.py -o Watcher/Watcher.py --create-dirs
-        # make files executable
-        chmod +x Watcher/Watcher.py
-
-        printf '%s\n' "$COLOR_GREEN Custom watcher added in folder Watcher $COLOR_REST"
-
-        # Setup file observer
-        # ddev . --dir /var/www/html/ "rm -rf venv"
-        ddev . --dir /var/www/html/Watcher "sudo pip3 install watchdog"
-        ddev . --dir /var/www/html/Watcher "sudo pip3 install virtualenv"
-        ddev . --dir /var/www/html/Watcher "virtualenv -p /usr/bin/python3 venv"
-        ddev . --dir /var/www/html/Watcher "python3 -m pip install watchdog"
-
-        printf '%s\n' "$COLOR_GREEN Virtualenv has been setup $COLOR_REST"
-    fi
-
-    ddev describe
 
 fi
