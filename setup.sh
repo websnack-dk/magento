@@ -173,15 +173,17 @@ if [ -d ".ddev" ]; then
 
         printf '%s\n' "$COLOR_GREEN Custom watcher added in folder Watcher $COLOR_REST"
 
+        virtualenv -p /usr/bin/python3 venv
+
         # Setup file observer
-        ddev exec --dir $WWW_DIR rm -rf venv
-        ddev exec --dir $WATCHER_DIR pip3 install watchdog
+        # ddev exec --dir $WWW_DIR rm -rf venv
+        ddev exec --dir $WATCHER_DIR sudo pip3 install watchdog
         ddev exec --dir $WWW_DIR sudo pip3 install virtualenv
-        ddev exec --dir $WATCHER_DIR virtualenv -p /usr/bin/python3 venv
         ddev exec --dir $WATCHER_DIR source venv/bin/activate
         ddev exec --dir $WATCHER_DIR python Watcher.py
         printf '%s\n' "$COLOR_GREEN Virtualenv has been setup $COLOR_REST"
     fi
 
+    ddev describe
 
 fi
