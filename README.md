@@ -1,4 +1,4 @@
-# Setup Magento2 project with DDEV & Mutagen 
+# Single Curl-Command to setup Magento2, Elasticsearch, DDEV & Mutagen.
 
 Bash script only works on existing Magento2 projects. Requiments below will automatic be installed. Except Docker Desktop.
 

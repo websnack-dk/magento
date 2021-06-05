@@ -41,12 +41,12 @@ fi
 
 # Copy helper-files into magento bin folder
 if [ ! -d "bin" ]; then
-    printf '%s\n' "$COLOR_RED [!] Bin folder does not exist. Make sure Magento2 project is installed $COLOR_REST"
+    printf '%s\n' "$COLOR_RED Bin folder does not exist. Make sure Magento2 project is installed $COLOR_REST"
     exit 1
 fi
 
 # Copy files from github
-printf '%s\n' "$COLOR_YELLOW Downloading helper files $COLOR_REST"
+printf '%s\n' "$COLOR_BLUE Downloading helper files $COLOR_REST"
 curl -s "$GITHUB"helpers/compile.sh --output bin/compile.sh --silent
 curl -s "$GITHUB"helpers/helpers.sh --output bin/helpers.sh --silent
 curl -s "$GITHUB"helpers/func.sh    --output bin/func.sh    --silent
@@ -60,10 +60,10 @@ printf '%s\n' "$COLOR_GREEN Helper files downloaded to bin folder $COLOR_REST"
 # Check if DDEV directory exist
 if [ ! -d ".ddev" ]; then
 
-  printf '%s\n' "$COLOR_RED [!] .ddev folder does not appear to be in the project. $COLOR_REST"
+  printf '%s\n' "$COLOR_RED .ddev folder does not appear to be in the project. $COLOR_REST"
   sleep 1
 
-  printf '%s\n' "$COLOR_YELLOW Creating .ddev folder $COLOR_REST"
+  printf '%s\n' "$COLOR_BLUE Creating .ddev folder $COLOR_REST"
   ddev config --project-type=magento2 --docroot=pub --create-docroot
   printf '%s\n' "$COLOR_GREEN .ddev folder created $COLOR_REST"
 
@@ -106,8 +106,8 @@ if [ ! -d ".ddev" ]; then
 
   # Let ddev create some base folders
   ddev start
-  sleep 2
-  printf '%s\n' "$COLOR_YELLOW Stopping DDEV $COLOR_REST"
+  sleep 1
+  printf '%s\n' "$COLOR_BLUE Stopping DDEV $COLOR_REST"
   ddev stop
 
   # Copy aliases file
@@ -144,24 +144,6 @@ config
 
     printf '%s\n' "$COLOR_GREEN Dockerfile added in web-build $COLOR_REST"
 
-    # Add watcher script
-    if [[ ! -d "Watcher" && ! -f "Watcher/Watcher.py" ]]; then
-        curl -s "$GITHUB"+Watcher/Watcher.py -o Watcher/Watcher.py --create-dirs
-        # make files executable
-        chmod +x Watcher/Watcher.py
-
-        printf '%s\n' "$COLOR_GREEN Custom watcher added in folder Watcher $COLOR_REST"
-
-        # Setup file observer
-        ddev exec --dir $WWW_DIR rm -rf venv
-        ddev exec --dir $WATCHER_DIR pip3 install watchdog
-        ddev exec --dir $WWW_DIR sudo pip3 install virtualenv
-        ddev exec --dir $WATCHER_DIR virtualenv -p /usr/bin/python3 venv
-        ddev exec --dir $WATCHER_DIR source venv/bin/activate
-        ddev exec --dir $WATCHER_DIR python Watcher.py
-        printf '%s\n' "$COLOR_GREEN Virtualenv has been setup $COLOR_REST"
-    fi
-
   fi
 
 fi
@@ -178,5 +160,28 @@ if [ -d ".ddev" ]; then
     # Run DDEV project in Docker
     printf '%s\n' "$COLOR_YELLOW Starting ddev project $COLOR_REST"
     ddev start
+
+    sleep 1
+
+    printf '%s\n' "$COLOR_BLUE [!] Adding observer setup $COLOR_REST"
+
+    # Add watcher script
+    if [[ ! -d "Watcher" && ! -f "Watcher/Watcher.py" ]]; then
+        curl -s "$GITHUB"Watcher/Watcher.py -o Watcher/Watcher.py --create-dirs
+        # make files executable
+        chmod +x Watcher/Watcher.py
+
+        printf '%s\n' "$COLOR_GREEN Custom watcher added in folder Watcher $COLOR_REST"
+
+        # Setup file observer
+        ddev exec --dir $WWW_DIR rm -rf venv
+        ddev exec --dir $WATCHER_DIR pip3 install watchdog
+        ddev exec --dir $WWW_DIR sudo pip3 install virtualenv
+        ddev exec --dir $WATCHER_DIR virtualenv -p /usr/bin/python3 venv
+        ddev exec --dir $WATCHER_DIR source venv/bin/activate
+        ddev exec --dir $WATCHER_DIR python Watcher.py
+        printf '%s\n' "$COLOR_GREEN Virtualenv has been setup $COLOR_REST"
+    fi
+
 
 fi
