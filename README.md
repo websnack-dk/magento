@@ -53,13 +53,13 @@ mindexer            => bin/magento indexer:reindex
 
 ## Observe file changes
   
-Use an external term for watcher. `ddev ssh` to Watcher-folder.   
 Standard observation files `.phtml` files in `app/frontend/design/Magento_Theme/templates/html`
 
-Observe files:
+Observe files:  
+Use an external term for watcher. `ddev ssh` to Watcher-folder.   
 
 ```bashpro shell script
-cd Watcher/ && source venv/bin/activate && pip3 install watchdog && python Watcher.py 
+cd Watcher/ && source venv/bin/activate && python Watcher.py 
 ```
 Change file observers in `Watcher/Watcher.py`
 
