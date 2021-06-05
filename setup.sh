@@ -175,6 +175,7 @@ if [ -d ".ddev" ]; then
         ddev . --dir /var/www/html/Watcher "sudo pip3 install watchdog"
         ddev . --dir /var/www/html/Watcher "sudo pip3 install virtualenv"
         ddev . --dir /var/www/html/Watcher "virtualenv -p /usr/bin/python3 venv"
+        ddev . --dir /var/www/html/Watcher "python3 -m pip install watchdog"
 
         printf '%s\n' "$COLOR_GREEN Virtualenv has been setup $COLOR_REST"
     fi

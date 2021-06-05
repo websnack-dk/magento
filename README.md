@@ -59,7 +59,11 @@ Observe files:
 Use an external term for watcher. `ddev ssh` to Watcher-folder.   
 
 ```bashpro shell script
-cd Watcher/ && source venv/bin/activate && python Watcher.py 
+cd Watcher/ && source venv/bin/activate && python Watcher.py
+```
+
+```bashpro shell script
+
 ```
 Change file observers in `Watcher/Watcher.py`
 
