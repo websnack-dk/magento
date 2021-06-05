@@ -107,9 +107,6 @@ if [ ! -d ".ddev" ]; then
   # Copy aliases file
   if [ ! -f ".ddev/homeadditions/.bash_aliases"  ]; then
 
-    # copy file
-    # cat .ddev/homeadditions/bash_aliases.example > .ddev/homeadditions/.bash_aliases
-
     # write to .bash_aliases
     cat >> .ddev/homeadditions/.bash_aliases << 'config'
 alias magento="bin/compile.sh"
@@ -139,7 +136,6 @@ RUN pip3
 config
 
     printf '%s\n' "$COLOR_GREEN Dockerfile added in web-build $COLOR_REST"
-
   fi
 
 fi
@@ -151,12 +147,12 @@ if [ -d ".ddev" ]; then
 
       # Create dir if not existing
       if [ ! -d ".ddev/commands/web" ]; then
-          mkdir -p .ddev/commands/web # parent and subfolders
+          mkdir -p .ddev/commands/web # create parent/subfolder
       fi
 
       printf '%s\n' "$COLOR_BLUE [!] Adding observer setup $COLOR_REST"
-      # curl -s "$GITHUB"helpers/observer --output .ddev/commands/web/observer
-      curl -s https://raw.githubusercontent.com/websnack-dk/magento/feature/shell-03-preinstall-pip3-virtualenv/helpers/observer --output .ddev/commands/web/observer
+      curl -s "$GITHUB"helpers/observer --output .ddev/commands/web/observer
+      ddev observer
       printf '%s\n' "$COLOR_GREEN Virtualenv has been setup $COLOR_REST"
     fi
 
