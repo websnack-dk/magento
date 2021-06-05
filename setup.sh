@@ -3,6 +3,9 @@
 # from github repo
 GITHUB=https://raw.githubusercontent.com/websnack-dk/magento/main/
 
+WATCHER_DIR=/var/www/html/Watcher/
+WWW_DIR=/var/www/
+
 COLOR_REST="$(tput sgr0)"
 COLOR_GREEN="$(tput setaf 2)"
 COLOR_RED="$(tput setaf 1)"
@@ -142,11 +145,22 @@ config
     printf '%s\n' "$COLOR_GREEN Dockerfile added in web-build $COLOR_REST"
 
     # Add watch script
-    if [[ ! -d "Watcher" && ! -f "Watcher/Watcher.py" ]]; then
-      curl -s "$GITHUB"Watcher/Watcher.py -o Watcher/Watcher.py --create-dirs
+    if [[ ! -d "$WATCHER_DIR" && ! -f "$WATCHER_DIR/Watcher.py" ]]; then
+
+      curl -s "$GITHUB"+"$WATCHER_DIR"/Watcher.py -o "$WATCHER_DIR"/Watcher.py --create-dirs
       # make files executable
-      chmod +x Watcher/Watcher.py
-      printf '%s\n' "$COLOR_GREEN Custom watcher added in Watcher/Watcher.py $COLOR_REST"
+      chmod +x $WATCHER_DIR/Watcher.py
+
+      printf '%s\n' "$COLOR_GREEN Custom watcher added in folder Watcher $COLOR_REST"
+
+      # Setup file observer
+      ddev exec --dir $WWW_DIR rm -rf venv
+      ddev exec --dir $WWW_DIR sudo pip3 install virtualenv
+      ddev exec --dir $WATCHER_DIR virtualenv -p /usr/bin/python3 venv
+      ddev exec --dir $WATCHER_DIR source venv/bin/activate
+      ddev exec --dir $WATCHER_DIR python Watcher.py
+      printf '%s\n' "$COLOR_GREEN Virtualenv has been setup $COLOR_REST"
+
     fi
 
   fi
@@ -164,12 +178,6 @@ if [ -d ".ddev" ]; then
 
     # Run DDEV project in Docker
     printf '%s\n' "$COLOR_YELLOW Starting ddev project $COLOR_REST"
-
-    ddev exec --dir /var/www/ rm -rf venv
-    ddev exec --dir /var/www/ sudo pip3 install virtualenv
-    ddev exec --dir /var/www/html/Watcher/ virtualenv -p /usr/bin/python3 venv
-    ddev exec --dir /var/www/html/Watcher/ source venv/bin/activate
-    ddev exec --dir /var/www/html/Watcher/ python Watcher.py
     ddev start
 
     printf '%s\n' "$COLOR_GREEN Setup done. Happy coding :) $COLOR_REST"
