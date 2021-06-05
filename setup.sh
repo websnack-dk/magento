@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # from github repo
-GITHUB=https://github.com/websnack-dk/magento/
+GITHUB=https://raw.githubusercontent.com/websnack-dk/magento/main/
 
 COLOR_REST="$(tput sgr0)"
 COLOR_GREEN="$(tput setaf 2)"

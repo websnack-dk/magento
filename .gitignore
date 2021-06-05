@@ -2,3 +2,4 @@
 .ddev/
 bin/*
 .idea
+/app
