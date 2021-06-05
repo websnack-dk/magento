@@ -58,8 +58,7 @@ Change file observers in `Watcher/Watcher.py`.
 Standard observation files `.phtml` files in `app/frontend/design/Magento_Theme/templates/html`
 
 ```bash
-cd Watcher/
-source venv/bin/activate
+cd Watcher/ && source venv/bin/activate && pip3 install watchdog
 ```
 
 Observe files
