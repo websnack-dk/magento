@@ -143,12 +143,12 @@ if [[ ! -d "bin" || ! -d "pub" ]]; then
     printf '%s\n' "$COLOR_RED Magento2 bin/pub folder not found. $COLOR_REST"
 
     # Prompt for a clean magento2 install
-    while true; do
+    echo "Install a clean Magento2 project? (Y/n) "
 
-      read -r -p "Install a clean Magento2 project? (Y/n) " answer
+    select answer in "Yes" "No"; do
 
       case $answer in
-        y|Y|Yes )
+        "Yes" )
             # Let ddev create some base folders
             printf '%s\n' "$COLOR_GREEN Installing setup_magento2 script $COLOR_REST"
 
@@ -174,7 +174,7 @@ if [[ ! -d "bin" || ! -d "pub" ]]; then
 
             exit 0
         ;;
-        [Nn]* )
+        "No" )
             exit 1
         ;;
       esac
