@@ -75,7 +75,7 @@ function install_mutagen() {
 function install_observer() {
   if [ ! -f ".ddev/commands/web/observer" ]; then
     printf '%s\n' "$COLOR_BLUE [!] Adding observer setup $COLOR_REST"
-    curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/observer --output .ddev/commands/web/observer --create-dirs
+    curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/observer --output .ddev/commands/web/observer --create-dirs --silent
     ddev observer
     printf '%s\n' "$COLOR_GREEN Virtualenv has been setup $COLOR_REST"
   fi
@@ -86,11 +86,8 @@ function base_ddev_setup() {
     mkdir .ddev/homeadditions/
     touch .ddev/homeadditions/.bash_aliases
 
-    # Copy aliases file
-    if [ ! -f ".ddev/homeadditions/.bash_aliases"  ]; then
-
-        # write to .bash_aliases
-        cat >> .ddev/homeadditions/.bash_aliases << 'config'
+    # write to .bash_aliases
+    cat >> .ddev/homeadditions/.bash_aliases << 'config'
 alias magento="bin/compile.sh"
 alias m="bin/magento"
 alias composer1="composer self-update --1"
@@ -103,7 +100,6 @@ alias mcompile="bin/magento setup:di:compile"
 alias mupgrade="bin/magento setup:upgrade"
 alias mindexer="bin/magento indexer:reindex"
 config
-  fi
 
     # Install pip3 from dockerfile
     if [[ -d ".ddev/web-build" && -f ".ddev/web-build/Dockerfile.example" ]]; then
@@ -154,7 +150,6 @@ if [[ ! -d "bin" || ! -d "pub" ]]; then
 
             ddev config --project-type=magento2 --docroot=pub --create-docroot
             mkdir -p .ddev/commands/web/
-            cat helpers/clean_magento2_install > .ddev/commands/web/clean_magento2_install
             curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/clean_magento2_install --output .ddev/commands/web/clean_magento2_install --silent
 
             if [ ! -f "composer.json" ]; then
@@ -164,8 +159,8 @@ if [[ ! -d "bin" || ! -d "pub" ]]; then
             fi
 
             create_elasticsearch
-            base_ddev_setup
             retrieve_helpers
+            base_ddev_setup
             install_observer
             install_mutagen
 
@@ -179,7 +174,6 @@ if [[ ! -d "bin" || ! -d "pub" ]]; then
         ;;
       esac
     done
-
 
 fi
 
