@@ -1,16 +1,11 @@
-# Single Curl-Command to setup Magento2, Elasticsearch, DDEV & Mutagen.
+# Single Curl-Command to setup or install Magento2, Elasticsearch, DDEV & Mutagen.
 
-### Bash script only works on existing Magento2 projects.
-#### Setup has only been tested on Apple Silicon M1
-
----
-
-Requirements will automatic be installed.  
-Except Docker Desktop
+Only tested on Apple Silicon M1  
+Requirements will automatically be installed, except Docker Desktop.
 
 ### Requirements
 
-- [Magento2](https://github.com/magento/magento2) 
+- [Magento2](https://github.com/magento/magento2) - √ Existing or Clean install  
 - [Docker Desktop](https://docs.docker.com/docker-for-mac/apple-m1/)
 - [DDEV-local](https://ddev.readthedocs.io/en/stable/)
     - [Elasticsearch](https://www.elastic.co/)
@@ -19,14 +14,17 @@ Except Docker Desktop
 ---
 
 ## Usage
-Cd into an existing magento2 project from term. Copy, paste curl-command below and enjoy ☕
+Copy/paste curl-command in an existing or empty project folder and enjoy magento2 ☕
 ```bashpro shell script
 curl https://raw.githubusercontent.com/websnack-dk/magento/main/setup.sh | bash
 ```
+
+Installing a clean magento2 project requires **Access Keys** (public/private) from [marketplace.magento.com](https://marketplace.magento.com/)
+
 --- 
 
 ## Helpers
-SSH into web-container and use shortcut-commands below
+`ddev ssh` into web-container and use shortcut-commands.
 
 ```bashpro shell script
 # ---- Custom commands ---- 
