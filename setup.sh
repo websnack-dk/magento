@@ -193,3 +193,9 @@ install_mutagen
 # Run DDEV project in Docker
 printf '%s\n' "$COLOR_YELLOW Starting ddev project $COLOR_REST"
 ddev start
+
+ddev . bin/magento deploy:mode:set developer
+ddev . bin/magento module:enable --all
+ddev . bin/magento module:disable Magento_Csp              # disable module
+ddev . bin/magento module:disable Magento_TwoFactorAuth    # disable module
+ddev . bin/magento setup:upgrade
