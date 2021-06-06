@@ -16,7 +16,7 @@ Requirements will automatically be installed, except Docker Desktop.
 ## Usage
 Copy/paste curl-command in an existing or empty project folder and enjoy magento2 ☕
 ```bashpro shell script
-curl https://raw.githubusercontent.com/websnack-dk/magento/main/setup.sh | bash
+bash <(curl -s https://raw.githubusercontent.com/websnack-dk/magento/bugfix/shell-06-check-if-folder-is-empty-clean-magento-install/setup.sh)
 ```
 
 Installing a clean magento2 project requires **Access Keys** (public/private) from [marketplace.magento.com](https://marketplace.magento.com/)

@@ -143,39 +143,43 @@ if [[ ! -d "bin" || ! -d "pub" ]]; then
     printf '%s\n' "$COLOR_RED Magento2 bin/pub folder not found. $COLOR_REST"
 
     # Prompt for a clean magento2 install
-    read -r -p "$COLOR_YELLOW Do you want to install a clean Magento2 project? (Y/n) $COLOR_REST" answer
-    case ${answer:0:1} in
-      y|Y|Yes )
+    echo "Install a clean Magento2 project? (Y/n) "
 
-          # Let ddev create some base folders
-          printf '%s\n' "$COLOR_GREEN Installing setup_magento2 script $COLOR_REST"
+    select answer in "Yes" "No"; do
 
-          ddev config --project-type=magento2 --docroot=pub --create-docroot
-          mkdir -p .ddev/commands/web/
-          cat helpers/clean_magento2_install > .ddev/commands/web/clean_magento2_install
-          curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/clean_magento2_install --output .ddev/commands/web/clean_magento2_install --silent
+      case $answer in
+        "Yes" )
+            # Let ddev create some base folders
+            printf '%s\n' "$COLOR_GREEN Installing setup_magento2 script $COLOR_REST"
 
-          if [ ! -f "composer.json" ]; then
+            ddev config --project-type=magento2 --docroot=pub --create-docroot
+            mkdir -p .ddev/commands/web/
+            cat helpers/clean_magento2_install > .ddev/commands/web/clean_magento2_install
+            curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/clean_magento2_install --output .ddev/commands/web/clean_magento2_install --silent
+
+            if [ ! -f "composer.json" ]; then
+              ddev start
+              ddev composer create --repository=https://repo.magento.com/ magento/project-community-edition
+              ddev stop
+            fi
+
+            create_elasticsearch
+            base_ddev_setup
+            retrieve_helpers
+            install_observer
+            install_mutagen
+
             ddev start
-            ddev composer create --repository=https://repo.magento.com/ magento/project-community-edition
-            ddev stop
-          fi
+            ddev clean_magento2_install
 
-          create_elasticsearch
-          base_ddev_setup
-          retrieve_helpers
-          install_observer
-          install_mutagen
+            exit 0
+        ;;
+        "No" )
+            exit 1
+        ;;
+      esac
+    done
 
-          ddev start
-          ddev clean_magento2_install
-
-          exit 0
-      ;;
-      * )
-          exit 1
-      ;;
-    esac
 
 fi
 
