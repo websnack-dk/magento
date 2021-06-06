@@ -5,7 +5,7 @@
 
 ---
 
-Requirements will automatic be installed.  
+Requirements will automatically be installed.  
 Except Docker Desktop
 
 ### Requirements
@@ -19,7 +19,7 @@ Except Docker Desktop
 ---
 
 ## Usage
-Cd into an existing magento2 project from term. Copy, paste curl-command below and enjoy ☕
+Copy, paste curl-command below and enjoy ☕
 ```bashpro shell script
 curl https://raw.githubusercontent.com/websnack-dk/magento/main/setup.sh | bash
 ```

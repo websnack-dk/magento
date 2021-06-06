@@ -1,0 +1,42 @@
+#!/bin/bash
+
+${DDEV_APPROOT} touch auth.json
+
+cat > auth.json << 'config'
+{
+  "http-basic": {
+      "repo.magento.com": {
+        "username": "2e5994284109a653d9f467332a3aba17",
+        "password": "4a402b02665d2d304fbc463df8047708"
+      }
+    }
+}
+
+config
+
+# rename env so we can run install below
+${DDEV_APPROOT} mv app/etc/env.php app/etc/temp_env.php
+
+# install magento2
+${DDEV_APPROOT} bin/magento setup:install --base-url=https://${DDEV_SITENAME}.ddev.site/ --db-host=db --db-name=db --db-user=db --db-password=db --elasticsearch-host=elasticsearch --admin-firstname=Magento --admin-lastname=User --admin-email=admin@admin.com --admin-user=admin --admin-password=admin123 --language=en_US
+
+# setup clean install
+${DDEV_APPROOT} bin/magento deploy:mode:set developer
+${DDEV_APPROOT} bin/magento module:enable --all
+
+${DDEV_APPROOT} bin/magento module:disable Magento_Csp              # disable module
+${DDEV_APPROOT} bin/magento module:disable Magento_TwoFactorAuth    # disable module
+
+${DDEV_APPROOT} bin/magento setup:upgrade
+${DDEV_APPROOT} bin/magento setup:static-content:deploy -f
+${DDEV_APPROOT} bin/magento setup:di:compile
+
+${DDEV_APPROOT} bin/magento indexer:reindex
+${DDEV_APPROOT} bin/magento cache:clean
+${DDEV_APPROOT} bin/magento cache:flush
+
+# Remove file created after install
+${DDEV_APPROOT} rm -rf app/etc/env.php
+
+# update env file to ddev
+${DDEV_APPROOT} mv app/etc/temp_env.php app/etc/env.php
