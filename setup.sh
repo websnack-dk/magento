@@ -120,9 +120,10 @@ function retrieve_helpers() {
 
   # Copy files from github
   printf '%s\n' "$COLOR_BLUE Downloading helper files $COLOR_REST"
-  curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/compile.sh --output bin/compile.sh --silent
-  curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/helpers.sh --output bin/helpers.sh --silent
-  curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/func.sh    --output bin/func.sh    --silent
+  curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/compile.sh   --output bin/compile.sh --silent
+  curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/helpers.sh   --output bin/helpers.sh --silent
+  curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/func.sh      --output bin/func.sh    --silent
+  curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/.gitignore   --output .gitignore     --silent
 
   # make files executable
   chmod +x bin/helpers.sh
