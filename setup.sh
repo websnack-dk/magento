@@ -215,4 +215,3 @@ install_observer
 install_mutagen
 
 checklist
-ddev describe
