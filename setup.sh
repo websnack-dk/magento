@@ -82,12 +82,11 @@ function install_observer() {
 }
 function base_ddev_setup() {
 
-    printf '%s\n' "$COLOR_GREEN .bash_aliases created $COLOR_REST"
-    mkdir .ddev/homeadditions/
-    touch .ddev/homeadditions/.bash_aliases
+    mkdir -p .ddev/homeadditions/
+    curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/.bashrc   --output .ddev/homeadditions/.bashrc   --silent
 
     # write to .bash_aliases
-    cat >> .ddev/homeadditions/.bash_aliases << 'config'
+    cat >> .ddev/homeadditions/.bashrc << 'config'
 alias magento="bin/compile.sh"
 alias m="bin/magento"
 alias composer1="composer self-update --1"
@@ -101,8 +100,11 @@ alias mupgrade="bin/magento setup:upgrade"
 alias mindexer="bin/magento indexer:reindex"
 config
 
+    echo "$COLOR_GREEN .bashrc added $COLOR_REST"
+
     # Install pip3 from dockerfile
     if [[ -d ".ddev/web-build" && -f ".ddev/web-build/Dockerfile.example" ]]; then
+
         # copy file
         cat .ddev/web-build/Dockerfile.example > .ddev/web-build/Dockerfile
         # write to file
@@ -120,16 +122,37 @@ function retrieve_helpers() {
 
   # Copy files from github
   printf '%s\n' "$COLOR_BLUE Downloading helper files $COLOR_REST"
-  curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/compile.sh   --output bin/compile.sh --silent
-  curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/helpers.sh   --output bin/helpers.sh --silent
-  curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/func.sh      --output bin/func.sh    --silent
-  curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/.gitignore   --output .gitignore     --silent
+  curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/compile.sh   --output bin/compile.sh   --silent
+  curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/helpers.sh   --output bin/helpers.sh   --silent
+  curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/func.sh      --output bin/func.sh      --silent
 
   # make files executable
   chmod +x bin/helpers.sh
   chmod +x bin/compile.sh
   chmod +x bin/func.sh
   printf '%s\n' "$COLOR_GREEN Helper files downloaded to bin folder $COLOR_REST"
+}
+function checklist() {
+    echo "$COLOR_GREEN###############################################"
+    echo "#                                             #"
+    echo "#  Follow steps before opening                #"
+    echo "#  your project in a browser.                 #"
+    echo "#                                             #"
+    echo "###############################################"
+    echo ""
+    echo "   1. Import existing SQL"
+    echo "        ddev import-db --src=/tmp/db-file.sql"
+    echo ""
+    echo "----------------------------------------------"
+    echo ""
+    echo "   2. ddev start"
+    echo ""
+    echo "----------------------------------------------"
+    echo ""
+    echo "   3. ddev ssh & run"
+    echo "        magento deploy"
+    echo ""
+    echo "$COLOR_REST"
 }
 
 #
@@ -151,7 +174,8 @@ if [[ ! -d "bin" || ! -d "pub" ]]; then
 
             ddev config --project-type=magento2 --docroot=pub --create-docroot
             mkdir -p .ddev/commands/web/
-            curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/clean_magento2_install --output .ddev/commands/web/clean_magento2_install --silent
+            curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/clean_magento2_install   --output .ddev/commands/web/clean_magento2_install  --silent
+            curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/.gitignore               --output .gitignore                                 --silent
 
             if [ ! -f "composer.json" ]; then
               ddev start
@@ -181,7 +205,6 @@ fi
 # Existing magento2 projects
 retrieve_helpers
 
-printf '%s\n' "$COLOR_RED .ddev folder does not appear to be in the project. $COLOR_REST"
 printf '%s\n' "$COLOR_BLUE Creating .ddev folder $COLOR_REST"
 ddev config --project-type=magento2 --docroot=pub --create-docroot
 printf '%s\n' "$COLOR_GREEN .ddev folder created $COLOR_REST"
@@ -191,6 +214,5 @@ base_ddev_setup
 install_observer
 install_mutagen
 
-# Run DDEV project in Docker
-printf '%s\n' "$COLOR_YELLOW Starting ddev project $COLOR_REST"
-ddev start
+checklist
+ddev describe
