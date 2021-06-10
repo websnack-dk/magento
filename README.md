@@ -1,3 +1,5 @@
+<a href="https://github.com/websnack-dk/magento/graphs/commit-activity" target="_blank"><img src="https://img.shields.io/badge/Maintained-yes-green" alt="Maintained - Yes" /></a>
+
 # Script to setup an existing/or- a clean Magento2 installation with DDEV-local.
 
 Only tested on Apple Silicon M1  
