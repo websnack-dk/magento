@@ -1,11 +1,10 @@
-# Single Curl-Command to setup or install Magento2, Elasticsearch, DDEV & Mutagen.
+# Script to setup an existing/or- a clean Magento2 installation with DDEV-local.
 
 Only tested on Apple Silicon M1  
 Requirements will automatically be installed, except Docker Desktop.
 
 ### Requirements
 
-- [Magento2](https://github.com/magento/magento2) - √ Existing or Clean install  
 - [Docker Desktop](https://docs.docker.com/docker-for-mac/apple-m1/)
 - [DDEV-local](https://ddev.readthedocs.io/en/stable/)
     - [Elasticsearch](https://www.elastic.co/)
