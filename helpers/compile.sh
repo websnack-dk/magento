@@ -16,9 +16,8 @@ remove_folders() {
 
 ## Run first time a project need to be build (Local)
 if [ "$1" == "deploy" ]; then
-
-  message "Setup Developer & Enable modules..."
-  bin/magento deploy:mode:set developer
+  
+  message "Enable modules..."
   bin/magento module:enable --all
 
   message "Disable modules:"
@@ -32,6 +31,10 @@ if [ "$1" == "deploy" ]; then
   bin/magento indexer:reindex
   bin/magento cache:clean
   bin/magento cache:flush
+  
+  message "Enable Developer mode"
+  bin/magento deploy:mode:set developer
+  
   message "Deployed"
 
 ## Install base repositories
