@@ -63,13 +63,13 @@ Observe files:
 Use an external term for watcher. `ddev ssh` to Watcher-folder.   
 
 ```bashpro shell script
-cd Watcher/ && source venv/bin/activate && python3 -m pip install watchdog
+cd watcher/ && source venv/bin/activate && python3 -m pip install watchdog
 ```
 
 ```bashpro shell script
-python Watcher.py
+python watcher.py
 ```
-Change file observers in `Watcher/Watcher.py`
+Change file observers in `watcher/watcher.py`
 
 ---
 
