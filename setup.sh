@@ -52,24 +52,7 @@ function install_observer() {
 }
 function base_ddev_setup() {
 
-    mkdir -p .ddev/homeadditions/
-    curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/.bashrc   --output .ddev/homeadditions/.bashrc   --silent
-
-    # write to .bash_aliases
-    cat >> .ddev/homeadditions/.bashrc << 'config'
-alias magento="bin/compile.sh"
-alias m="bin/magento"
-alias composer1="composer self-update --1"
-alias composer2="composer self-update --2"
-alias mdev="bin/magento deploy:mode:set developer"
-alias mclean="bin/magento cache:clean"
-alias mflush="bin/magento cache:flush"
-alias mdeploy="bin/magento setup:static-content:deploy -f da_DK"
-alias mcompile="bin/magento setup:di:compile"
-alias mupgrade="bin/magento setup:upgrade"
-alias mindexer="bin/magento indexer:reindex"
-config
-
+    curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/.bashrc  --output .ddev/homeadditions/.bashrc --create-dirs --silent
     echo "$COLOR_GREEN .bashrc added $COLOR_REST"
 
     # Install pip3 from dockerfile
@@ -92,9 +75,9 @@ function retrieve_helpers() {
 
   # Copy files from github
   printf '%s\n' "$COLOR_BLUE Downloading helper files $COLOR_REST"
-  curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/compile.sh   --output bin/compile.sh   --silent
-  curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/helpers.sh   --output bin/helpers.sh   --silent
-  curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/func.sh      --output bin/func.sh      --silent
+  curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/compile.sh   --output  --create-dirs  bin/compile.sh   --silent
+  curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/helpers.sh   --output  --create-dirs  bin/helpers.sh   --silent
+  curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/func.sh      --output  --create-dirs  bin/func.sh      --silent
 
   # make files executable
   chmod +x bin/helpers.sh
@@ -109,19 +92,19 @@ function checklist() {
     echo "#  your project in a browser.                 #"
     echo "#                                             #"
     echo "###############################################"
-    echo ""
+    echo
     echo "   1. Import existing SQL"
     echo "        ddev import-db --src=/tmp/db-file.sql"
-    echo ""
+    echo
     echo "----------------------------------------------"
-    echo ""
+    echo
     echo "   2. ddev start"
-    echo ""
+    echo
     echo "----------------------------------------------"
-    echo ""
+    echo
     echo "   3. ddev ssh & run"
     echo "        magento deploy"
-    echo ""
+    echo
     echo "$COLOR_REST"
 }
 
