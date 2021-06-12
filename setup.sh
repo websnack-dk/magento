@@ -31,37 +31,7 @@ fi
 
 function create_elasticsearch() {
     if [ ! -f ".ddev/docker-compose.elasticsearch.yaml" ]; then
-      {
-          echo -e "version: '3.6'"
-          echo -e "services:"
-          echo -e " elasticsearch:"
-          echo -e "   container_name: ddev-\${DDEV_SITENAME}-elasticsearch"
-          echo -e "   hostname: \${DDEV_SITENAME}-elasticsearch"
-          echo -e "   image: elasticsearch:7.10.1"
-          echo -e "   ports:"
-          echo -e "        - \"9200\""
-          echo -e "        - \"9300\""
-          echo -e "   environment:"
-          echo -e "     - cluster.name=docker-cluster"
-          echo -e "     - discovery.type=single-node"
-          echo -e "     - bootstrap.memory_lock=true"
-          echo -e "     - \"ES_JAVA_OPTS=-Xms512m -Xmx512m\""
-          echo -e "     - VIRTUAL_HOST=\$DDEV_HOSTNAME"
-          echo -e "     - HTTP_EXPOSE=9200:9200"
-          echo -e "     - HTTPS_EXPOSE=9201:9200"
-          echo -e "   labels:"
-          echo -e "       com.ddev.site-name: \${DDEV_SITENAME}"
-          echo -e "       com.ddev.approot: \$DDEV_APPROOT"
-          echo -e "   volumes:"
-          echo -e "       - elasticsearch:/usr/share/elasticsearch/data"
-          echo -e "       - \".:/mnt/ddev_config\""
-          echo -e " web:"
-          echo -e "   links:"
-          echo -e "     - elasticsearch:elasticsearch"
-          echo -e "volumes:"
-          echo -e "   elasticsearch:"
-      } > .ddev/docker-compose.elasticsearch.yaml
-
+      curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/docker-compose/docker-compose.elasticsearch.yaml --output .ddev/docker-compose.elasticsearch.yaml  --create-dirs --silent
       printf '%s\n' "$COLOR_GREEN Docker-compose.elasticsearch.yaml added $COLOR_REST"
     fi
 }
