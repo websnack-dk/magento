@@ -1,0 +1,22 @@
+{
+  "name": "tailwind",
+  "version": "1.0.0",
+  "description": "Tailwind CSS compiler",
+  "main": "tailwind.config.js",
+  "dependencies": {
+    "autoprefixer": "latest",
+    "csso-cli": "latest",
+    "postcss-cli": "latest",
+    "postcss-custom-properties": "latest",
+    "postcss-import": "latest",
+    "tailwindcss": "latest"
+  },
+  "scripts": {
+    "build": "npx postcss tailwind-source.css -o ./styles.css && npm run compile-success",
+    "minify": "npx csso tailwind-output.css --output ../styles.css && npm run compile-success",
+    "compile-success": "echo \"\\033[0;32mDone!\\033[0m\""
+  },
+  "author": "Websnack, William",
+  "license": "ISC",
+  "private": true
+}
