@@ -46,10 +46,11 @@ composer2           => composer self-update --2
 mdev                => bin/magento deploy:mode:set developer
 mclean              => bin/magento cache:clean
 mflush              => bin/magento cache:flush
-mdeploy             => bin/magento setup:static-content:deploy -f da_DK
+mdeploy             => bin/magento setup:static-content:deploy -f da_DK && bin/magento setup:static-content:deploy -f da_DK
 mcompile            => bin/magento setup:di:compile
 mupgrade            => bin/magento setup:upgrade
 mindexer            => bin/magento indexer:reindex
+mcron               => bin/magento cron:run
 ```
 
 ---
