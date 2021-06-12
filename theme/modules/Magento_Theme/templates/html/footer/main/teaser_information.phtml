@@ -1,0 +1,17 @@
+<?php
+/** @var $block Template */
+
+use Magento\Cms\Block\Block;
+use Magento\Framework\View\Element\Template;
+
+$blockLayout = $this->getLayout()->createBlock(Block::class);
+$teaserHTML  = $blockLayout->setBlockId("footer_main_information")->toHtml();
+
+?>
+
+<div class="container my-24 lg:mb-6 px-12 lg:px-0 ">
+    <div class="border-primary border-t-2 pt-4 w-40 mb-4 py-4"></div>
+    <div class="w-full">
+        <?=$teaserHTML?>
+    </div>
+</div>
