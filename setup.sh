@@ -31,37 +31,7 @@ fi
 
 function create_elasticsearch() {
     if [ ! -f ".ddev/docker-compose.elasticsearch.yaml" ]; then
-      {
-          echo -e "version: '3.6'"
-          echo -e "services:"
-          echo -e " elasticsearch:"
-          echo -e "   container_name: ddev-\${DDEV_SITENAME}-elasticsearch"
-          echo -e "   hostname: \${DDEV_SITENAME}-elasticsearch"
-          echo -e "   image: elasticsearch:7.10.1"
-          echo -e "   ports:"
-          echo -e "        - \"9200\""
-          echo -e "        - \"9300\""
-          echo -e "   environment:"
-          echo -e "     - cluster.name=docker-cluster"
-          echo -e "     - discovery.type=single-node"
-          echo -e "     - bootstrap.memory_lock=true"
-          echo -e "     - \"ES_JAVA_OPTS=-Xms512m -Xmx512m\""
-          echo -e "     - VIRTUAL_HOST=\$DDEV_HOSTNAME"
-          echo -e "     - HTTP_EXPOSE=9200:9200"
-          echo -e "     - HTTPS_EXPOSE=9201:9200"
-          echo -e "   labels:"
-          echo -e "       com.ddev.site-name: \${DDEV_SITENAME}"
-          echo -e "       com.ddev.approot: \$DDEV_APPROOT"
-          echo -e "   volumes:"
-          echo -e "       - elasticsearch:/usr/share/elasticsearch/data"
-          echo -e "       - \".:/mnt/ddev_config\""
-          echo -e " web:"
-          echo -e "   links:"
-          echo -e "     - elasticsearch:elasticsearch"
-          echo -e "volumes:"
-          echo -e "   elasticsearch:"
-      } > .ddev/docker-compose.elasticsearch.yaml
-
+      curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/docker-compose/docker-compose.elasticsearch.yaml --output .ddev/docker-compose.elasticsearch.yaml  --create-dirs --silent
       printf '%s\n' "$COLOR_GREEN Docker-compose.elasticsearch.yaml added $COLOR_REST"
     fi
 }
@@ -82,24 +52,7 @@ function install_observer() {
 }
 function base_ddev_setup() {
 
-    mkdir -p .ddev/homeadditions/
-    curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/.bashrc   --output .ddev/homeadditions/.bashrc   --silent
-
-    # write to .bash_aliases
-    cat >> .ddev/homeadditions/.bashrc << 'config'
-alias magento="bin/compile.sh"
-alias m="bin/magento"
-alias composer1="composer self-update --1"
-alias composer2="composer self-update --2"
-alias mdev="bin/magento deploy:mode:set developer"
-alias mclean="bin/magento cache:clean"
-alias mflush="bin/magento cache:flush"
-alias mdeploy="bin/magento setup:static-content:deploy -f da_DK"
-alias mcompile="bin/magento setup:di:compile"
-alias mupgrade="bin/magento setup:upgrade"
-alias mindexer="bin/magento indexer:reindex"
-config
-
+    curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/.bashrc  --output .ddev/homeadditions/.bashrc --create-dirs --silent
     echo "$COLOR_GREEN .bashrc added $COLOR_REST"
 
     # Install pip3 from dockerfile
@@ -122,9 +75,9 @@ function retrieve_helpers() {
 
   # Copy files from github
   printf '%s\n' "$COLOR_BLUE Downloading helper files $COLOR_REST"
-  curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/compile.sh   --output bin/compile.sh   --silent
-  curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/helpers.sh   --output bin/helpers.sh   --silent
-  curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/func.sh      --output bin/func.sh      --silent
+  curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/compile.sh   --output  --create-dirs  bin/compile.sh   --silent
+  curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/helpers.sh   --output  --create-dirs  bin/helpers.sh   --silent
+  curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/func.sh      --output  --create-dirs  bin/func.sh      --silent
 
   # make files executable
   chmod +x bin/helpers.sh
@@ -139,19 +92,19 @@ function checklist() {
     echo "#  your project in a browser.                 #"
     echo "#                                             #"
     echo "###############################################"
-    echo ""
+    echo
     echo "   1. Import existing SQL"
     echo "        ddev import-db --src=/tmp/db-file.sql"
-    echo ""
+    echo
     echo "----------------------------------------------"
-    echo ""
+    echo
     echo "   2. ddev start"
-    echo ""
+    echo
     echo "----------------------------------------------"
-    echo ""
+    echo
     echo "   3. ddev ssh & run"
     echo "        magento deploy"
-    echo ""
+    echo
     echo "$COLOR_REST"
 }
 
