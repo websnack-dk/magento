@@ -6,6 +6,8 @@ COLOR_RED="$(tput setaf 1)"
 COLOR_YELLOW="$(tput setaf 3)"
 COLOR_BLUE="$(tput setaf 4)"
 
+declare -r VERSION="1.0.0"
+
 # Is docker installed!?
 if ! command -v docker &> /dev/null; then
     # Prompt for auto install or exit
@@ -29,20 +31,37 @@ if ! command -v ddev &> /dev/null; then
     esac
 fi
 
-function create_elasticsearch() {
+logo() {
+
+  local logo="
+  ███╗   ███╗ █████╗  ██████╗ ███████╗███╗   ██╗████████╗ ██████╗ ██████╗
+  ████╗ ████║██╔══██╗██╔════╝ ██╔════╝████╗  ██║╚══██╔══╝██╔═══██╗╚════██╗
+  ██╔████╔██║███████║██║  ███╗█████╗  ██╔██╗ ██║   ██║   ██║   ██║ █████╔╝
+  ██║╚██╔╝██║██╔══██║██║   ██║██╔══╝  ██║╚██╗██║   ██║   ██║   ██║██╔═══╝
+  ██║ ╚═╝ ██║██║  ██║╚██████╔╝███████╗██║ ╚████║   ██║   ╚██████╔╝███████╗
+  ╚═╝     ╚═╝╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚═╝  ╚═══╝   ╚═╝    ╚═════╝ ╚══════╝"
+
+    echo -e "\033[1;33m $logo \033[0m"
+    echo -e "${COLOR_YELLOW}
+                              Magento2 base setup
+                                    v$VERSION ${COLOR_REST}
+                           "
+}
+
+create_elasticsearch() {
     if [ ! -f ".ddev/docker-compose.elasticsearch.yaml" ]; then
       curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/docker-compose/docker-compose.elasticsearch.yaml --output .ddev/docker-compose.elasticsearch.yaml  --create-dirs --silent
       printf '%s\n' "$COLOR_GREEN Docker-compose.elasticsearch.yaml added $COLOR_REST"
     fi
 }
-function install_mutagen() {
+install_mutagen() {
   # Setup mutagen if not already set
   if [ ! -f ".ddev/commands/host/mutagen" ]; then
     printf '%s\n' "$COLOR_YELLOW Setting up mutagen sync script in current ddev project $COLOR_REST"
     curl https://raw.githubusercontent.com/williamengbjerg/ddev-mutagen/master/setup.sh | bash
   fi
 }
-function install_observer() {
+install_observer() {
   if [ ! -f ".ddev/commands/web/observer" ]; then
     printf '%s\n' "$COLOR_BLUE [!] Adding observer setup $COLOR_REST"
     curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/observer --output .ddev/commands/web/observer --create-dirs --silent
@@ -50,10 +69,11 @@ function install_observer() {
     printf '%s\n' "$COLOR_GREEN Virtualenv has been setup $COLOR_REST"
   fi
 }
-function base_ddev_setup() {
+base_ddev_setup() {
 
-    curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/.bashrc  --output .ddev/homeadditions/.bashrc --create-dirs --silent
-    echo "$COLOR_GREEN .bashrc added $COLOR_REST"
+    curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/.bashrc            --output .ddev/homeadditions/.bashrc  --create-dirs --silent
+    curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/config.local.yaml   --output .ddev/config.local.yaml       --silent
+    echo "$COLOR_GREEN Added .bashrc & config.local.yaml $COLOR_REST"
 
     # Install pip3 from dockerfile
     if [[ -d ".ddev/web-build" && -f ".ddev/web-build/Dockerfile.example" ]]; then
@@ -71,7 +91,7 @@ config
         printf '%s\n' "$COLOR_GREEN Dockerfile added in web-build $COLOR_REST"
     fi
 }
-function retrieve_helpers() {
+retrieve_helpers() {
 
   # Copy files from github
   printf '%s\n' "$COLOR_BLUE Downloading helper files $COLOR_REST"
@@ -85,7 +105,7 @@ function retrieve_helpers() {
   chmod +x bin/func.sh
   printf '%s\n' "$COLOR_GREEN Helper files downloaded to bin folder $COLOR_REST"
 }
-function checklist() {
+checklist() {
     echo "$COLOR_GREEN###############################################"
     echo "#                                             #"
     echo "#  Follow steps before opening                #"
@@ -93,16 +113,16 @@ function checklist() {
     echo "#                                             #"
     echo "###############################################"
     echo
-    echo "   1. Import existing SQL"
+    echo "   1. Import existing SQL                     "
     echo "        ddev import-db                        "
     echo
     echo "----------------------------------------------"
     echo
-    echo "   2. ddev start"
+    echo "   2. ddev start                              "
     echo
     echo "----------------------------------------------"
     echo
-    echo "   3. ddev ssh & run"
+    echo "   3. ddev ssh & run                          "
     echo "        magento deploy                        "
     echo
     echo "$COLOR_REST"
@@ -113,17 +133,20 @@ function checklist() {
 #
 if [[ ! -d "bin" || ! -d "pub" ]]; then
 
-    printf '%s\n' "$COLOR_RED Magento2 bin/pub folder not found. $COLOR_REST"
+    logo
+
+    echo "Magento2 bin/pub folder not found"
 
     # Prompt for a clean magento2 install
-    echo "Install a clean Magento2 project? (Y/n) "
+    echo "${COLOR_GREEN}Install a clean Magento2 project? (Y/n) ${COLOR_REST}"
 
     select answer in "Yes" "No"; do
 
       case $answer in
         "Yes" )
+
             # Let ddev create some base folders
-            printf '%s\n' "$COLOR_GREEN Installing setup_magento2 script $COLOR_REST"
+            echo "$COLOR_GREEN Installing setup_magento2 script $COLOR_REST"
 
             ddev config --project-type=magento2 --docroot=pub --create-docroot
             mkdir -p .ddev/commands/web/
@@ -156,6 +179,7 @@ if [[ ! -d "bin" || ! -d "pub" ]]; then
 fi
 
 # Existing magento2 projects
+logo
 retrieve_helpers
 
 printf '%s\n' "$COLOR_BLUE Creating .ddev folder $COLOR_REST"

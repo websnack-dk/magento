@@ -42,7 +42,7 @@ elif [ "$1" == "composer" ]; then
   install_or_update_composer_packages false
 
 ## Dump SQL with magerun2
-elif [ "$1" == "magerun" ]; then
+elif [ "$1" == "dump-db " ]; then
 
   MAGE_DIR=./n98-magerun2.phar
 
@@ -57,7 +57,7 @@ elif [ "$1" == "magerun" ]; then
 
   ## Export SQL
   # ./n98-magerun2.phar db:dump --strip="@development" # Development
-  # n98-magerun2.phar db:dump --compression="gzip" # full-zip
+  n98-magerun2.phar db:dump --compression="gzip" # full-zip
 
   ## CleanUp: Forget and remove n98-magerun2.phar
   rm -rf ./n98-magerun2.phar
@@ -101,7 +101,7 @@ elif [ "$1" == "tailwind" ]; then
 
   # compile tailwindcss
   message "Compiling: Tailwind.."
-  cd /var/www/html/app/design/frontend/Kommerce/base/web/css/tailwind || exit
+  cd /var/www/html/app/design/frontend/Theme/base/web/css/tailwind || exit
   npm run build
   sleep 1
 
