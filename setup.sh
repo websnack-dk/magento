@@ -203,15 +203,22 @@ setupOptions=(
   "Quit"
 )
 
-select selectedSetup in "${setupOptions[@]}"
-do
+select selectedSetup in "${setupOptions[@]}"; do
+
     case $selectedSetup in
-        0) existing_project ;;
-        1) clean_magento2_install;;
-        3)
-            echo "Existing setup with Tailwind setup in frontend"
+        Existing)
+            #existing_project
+            echo "you chose existing"
           ;;
-        *) exit  ;;
+        "New install")
+            echo "you chose new install"
+            #clean_magento2_install
+          ;;
+        "Base/Tailwind")
+            echo "you chose Base/Tailwind"
+          #echo "Existing setup with Tailwind setup in frontend"
+          ;;
+        *) exit ;;
     esac
-    exit
+
 done
