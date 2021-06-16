@@ -8,6 +8,7 @@ export PS1="[\[$(tput setaf 3)\]\t\[$(tput sgr0)\]][\[$(tput setaf 6)\]\u\[$(tpu
 
 ###+ ALIASES + ###
 alias magento="bin/compile.sh"
+alias updatephp="update-alternatives --config php"
 
 alias m="bin/magento"
 alias composer1="composer self-update --1"
