@@ -8,10 +8,12 @@ export PS1="[\[$(tput setaf 3)\]\t\[$(tput sgr0)\]][\[$(tput setaf 6)\]\u\[$(tpu
 
 ###+ ALIASES + ###
 alias magento="bin/compile.sh"
-
-alias m="bin/magento"
+alias updatephp="update-alternatives --config php"
 alias composer1="composer self-update --1"
 alias composer2="composer self-update --2"
+alias composerup="composer update"
+
+alias m="bin/magento"
 alias mdev="bin/magento deploy:mode:set developer"
 alias mclean="bin/magento cache:clean"
 alias mflush="bin/magento cache:flush"
