@@ -6,7 +6,7 @@ COLOR_RED="$(tput setaf 1)"
 COLOR_YELLOW="$(tput setaf 3)"
 COLOR_BLUE="$(tput setaf 4)"
 
-declare -r VERSION="1.0.0"
+declare -r VERSION="2.3.0"
 
 # Is docker installed!?
 if ! command -v docker &> /dev/null; then
@@ -31,6 +31,7 @@ if ! command -v ddev &> /dev/null; then
     esac
 fi
 
+
 logo() {
 
   local logo="
@@ -43,8 +44,8 @@ logo() {
 
     echo -e "\033[1;33m $logo \033[0m"
     echo -e "${COLOR_YELLOW}
-                              Magento2 base setup
-                                    v$VERSION ${COLOR_REST}
+                               Project setup
+                                  v$VERSION ${COLOR_REST}
                            "
 }
 
@@ -128,67 +129,89 @@ checklist() {
     echo "$COLOR_REST"
 }
 
-#
-# Clean magento2 install
-#
-if [[ ! -d "bin" || ! -d "pub" ]]; then
+## Choices
+existing_project() {
+  retrieve_helpers
+  printf '%s\n' "$COLOR_BLUE Creating .ddev folder $COLOR_REST"
+  ddev config --project-type=magento2 --docroot=pub --create-docroot
+  printf '%s\n' "$COLOR_GREEN .ddev folder created $COLOR_REST"
 
-    logo
+  create_elasticsearch
+  base_ddev_setup
+  install_observer
+  install_mutagen
 
-    echo "Magento2 bin/pub folder not found"
+  checklist
+}
+clean_magento2_install() {
+  # Fresh clean magento2 install
+  if [[ ! -d "bin" || ! -d "pub" ]]; then
 
-    # Prompt for a clean magento2 install
-    echo "${COLOR_GREEN}Install a clean Magento2 project? (Y/n) ${COLOR_REST}"
+      echo "Magento2 bin/pub folder not found"
 
-    select answer in "Yes" "No"; do
+      # Prompt for a clean magento2 install
+      echo "${COLOR_GREEN}Install a clean Magento2 project? (Y/n) ${COLOR_REST}"
 
-      case $answer in
-        "Yes" )
+      select answer in "Yes" "No"; do
 
-            # Let ddev create some base folders
-            echo "$COLOR_GREEN Installing setup_magento2 script $COLOR_REST"
+        case $answer in
+          "Yes" )
 
-            ddev config --project-type=magento2 --docroot=pub --create-docroot
-            mkdir -p .ddev/commands/web/
-            curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/clean_magento2_install   --output .ddev/commands/web/clean_magento2_install  --silent
-            curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/.gitignore               --output .gitignore                                 --silent
+              # Let ddev create some base folders
+              echo "$COLOR_GREEN Installing setup_magento2 script $COLOR_REST"
 
-            if [ ! -f "composer.json" ]; then
+              ddev config --project-type=magento2 --docroot=pub --create-docroot
+              mkdir -p .ddev/commands/web/
+              curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/clean_magento2_install   --output .ddev/commands/web/clean_magento2_install  --silent
+              curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/.gitignore               --output .gitignore                                 --silent
+
+              if [ ! -f "composer.json" ]; then
+                ddev start
+                ddev composer create --repository=https://repo.magento.com/ magento/project-community-edition
+                ddev stop
+              fi
+
+              create_elasticsearch
+              retrieve_helpers
+              base_ddev_setup
+              install_observer
+              install_mutagen
+
               ddev start
-              ddev composer create --repository=https://repo.magento.com/ magento/project-community-edition
-              ddev stop
-            fi
+              ddev clean_magento2_install
 
-            create_elasticsearch
-            retrieve_helpers
-            base_ddev_setup
-            install_observer
-            install_mutagen
+              exit 0
+          ;;
+          "No" )
+              exit 1
+          ;;
+        esac
+      done
 
-            ddev start
-            ddev clean_magento2_install
+  fi
+}
 
-            exit 0
-        ;;
-        "No" )
-            exit 1
-        ;;
-      esac
-    done
-
-fi
-
-# Existing magento2 projects
 logo
-retrieve_helpers
 
-printf '%s\n' "$COLOR_BLUE Creating .ddev folder $COLOR_REST"
-ddev config --project-type=magento2 --docroot=pub --create-docroot
-printf '%s\n' "$COLOR_GREEN .ddev folder created $COLOR_REST"
+echo -e "${COLOR_YELLOW}Please choose magento2 setup: ${COLOR_REST}"
 
-create_elasticsearch
-base_ddev_setup
-install_observer
-install_mutagen
+PS3="Enter choice number: "
+setupOptions=(
+  "Existing"        # Existing setup
+  "New install"     # Fresh clean magento2 install
+  "Base/Tailwind"   # Existing project with Tailwind setup
+  "Quit"
+)
 
-checklist
+select selectedSetup in "${setupOptions[@]}"
+do
+    case $selectedSetup in
+        0) existing_project ;;
+        1) clean_magento2_install;;
+        3)
+            echo "Existing setup with Tailwind setup in frontend"
+          ;;
+        *) exit  ;;
+    esac
+    exit
+done
