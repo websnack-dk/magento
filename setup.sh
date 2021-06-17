@@ -144,58 +144,58 @@ existing_project() {
   checklist
 }
 clean_magento2_install() {
+
   # Fresh clean magento2 install
   if [[ ! -d "bin" || ! -d "pub" ]]; then
 
-      echo "Magento2 bin/pub folder not found"
-
       # Prompt for a clean magento2 install
-      echo "${COLOR_GREEN}Install a clean Magento2 project? (Y/n) ${COLOR_REST}"
+      echo "${COLOR_YELLOW}Fresh Magento2 project install? (Y/n) ${COLOR_REST}"
 
       select answer in "Yes" "No"; do
 
-        case $answer in
-          "Yes" )
+          case $answer in
+              "Yes" )
 
-              # Let ddev create some base folders
-              echo "$COLOR_GREEN Installing setup_magento2 script $COLOR_REST"
+                  # Let ddev create some base folders
+                  echo "$COLOR_GREEN Installing setup_magento2 script $COLOR_REST"
 
-              ddev config --project-type=magento2 --docroot=pub --create-docroot
-              mkdir -p .ddev/commands/web/
-              curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/clean_magento2_install   --output .ddev/commands/web/clean_magento2_install  --silent
-              curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/.gitignore               --output .gitignore                                 --silent
+                  ddev config --project-type=magento2 --docroot=pub --create-docroot
+                  mkdir -p .ddev/commands/web/
+                  curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/clean_magento2_install   --output .ddev/commands/web/clean_magento2_install  --silent
+                  curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/.gitignore               --output .gitignore                                 --silent
 
-              if [ ! -f "composer.json" ]; then
-                ddev start
-                ddev composer create --repository=https://repo.magento.com/ magento/project-community-edition
-                ddev stop
-              fi
+                  if [ ! -f "composer.json" ]; then
+                    ddev start
+                    ddev composer create --repository=https://repo.magento.com/ magento/project-community-edition
+                    ddev stop
+                  fi
 
-              create_elasticsearch
-              retrieve_helpers
-              base_ddev_setup
-              install_observer
-              install_mutagen
+                  create_elasticsearch
+                  retrieve_helpers
+                  base_ddev_setup
+                  install_observer
+                  install_mutagen
 
-              ddev start
-              ddev clean_magento2_install
+                  ddev start
+                  ddev clean_magento2_install
 
-              exit 0
-          ;;
-          "No" )
-              exit 1
-          ;;
-        esac
+                  exit 0
+              ;;
+              "No" )
+                  exit 1
+              ;;
+          esac
       done
 
   fi
+
 }
 
 logo
 
 echo -e "${COLOR_YELLOW}Please choose magento2 setup: ${COLOR_REST}"
 
-PS3="Enter choice number: "
+PS3="Enter choice (number): "
 setupOptions=(
   "Existing"        # Existing setup
   "New install"     # Fresh clean magento2 install
@@ -211,8 +211,9 @@ select selectedSetup in "${setupOptions[@]}"; do
             echo "you chose existing"
           ;;
         "New install")
-            echo "you chose new install"
-            #clean_magento2_install
+            # echo "you chose new install"
+            clean_magento2_install
+            exit 0
           ;;
         "Base/Tailwind")
             echo "you chose Base/Tailwind"
