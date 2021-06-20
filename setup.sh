@@ -55,6 +55,12 @@ function base_ddev_setup() {
     curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/.bashrc  --output .ddev/homeadditions/.bashrc --create-dirs --silent
     echo "$COLOR_GREEN .bashrc added $COLOR_REST"
 
+    # Exclude backup-folder, project-stopped from IDE (Phpstorm)
+    local FOLDER_NAME="${PWD##*/}"
+    curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/phpstorm/exclude_project_stopped.iml  --output ".idea/${FOLDER_NAME}.iml" --create-dirs --silent
+    sed -i -E "s%\${DDEV_PROJECT}%${FOLDER_NAME}%g" .idea/magento.iml
+    echo "$COLOR_GREEN Config to exclude backup folder added $COLOR_REST"
+
     # Install pip3 from dockerfile
     if [[ -d ".ddev/web-build" && -f ".ddev/web-build/Dockerfile.example" ]]; then
 
