@@ -76,6 +76,12 @@ base_ddev_setup() {
     curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/config.local.yaml   --output .ddev/config.local.yaml       --silent
     echo "$COLOR_GREEN Added .bashrc & config.local.yaml $COLOR_REST"
 
+    # Exclude backup-folder, project-stopped from IDE (Phpstorm)
+    local FOLDER_NAME="${PWD##*/}"
+    curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/phpstorm/exclude_project_stopped.iml  --output ".idea/${FOLDER_NAME}.iml" --create-dirs --silent
+    #sed -i '' "s%\${DDEV_PROJECT}%${FOLDER_NAME}%g" .idea/"${FOLDER_NAME}".iml
+    echo "$COLOR_GREEN Config to exclude backup folder added $COLOR_REST"
+
     # Install pip3 from dockerfile
     if [[ -d ".ddev/web-build" && -f ".ddev/web-build/Dockerfile.example" ]]; then
 
