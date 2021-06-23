@@ -8,14 +8,17 @@ remove_folders() {
   rm -rf var/view_preprocessed/
   rm -rf pub/static/frontend/
   rm -r generated/*/*
+  rm -rf var/cache
   rm -rf pub/static/*
   rm -rf var/generation
-  rm -rf var/cache
   rm -rf var/page_cache
 }
 
 ## Run first time a project need to be build (Local)
 if [ "$1" == "deploy" ]; then
+
+  rm -rf generated/*
+  rm -rf var/cache/*
   
   message "Enable modules..."
   bin/magento module:enable --all
