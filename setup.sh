@@ -207,10 +207,13 @@ clean_magento2_install() {
 }
 
 # Check version from composer file (output, success=0
-check_magento_version () {
+check_magento_version() {
   grep -q '"magento/product-community-edition": "'$MAGENTO_VERSION'"' "composer.json" && echo $?
 }
 
+base_tailwind_theme() {
+  echo "CURL TAILWIND THEME & Setup base";
+}
 
 logo
 
@@ -231,6 +234,7 @@ select selectedSetup in "${setupOptions[@]}"; do
 
             if [ "$(check_magento_version)" == "0" ]; then
               echo "It's a v.2.4.2 - you chose existing"
+              # existing_project
               exit 1
             fi
 
@@ -238,14 +242,14 @@ select selectedSetup in "${setupOptions[@]}"; do
 
           ;;
         "New install")
-            # echo "you chose new install"
-            clean_magento2_install
+            echo "you chose new install"
+            # clean_magento2_install
             exit 1
           ;;
         "Base/Tailwind")
             echo "you chose Base/Tailwind"
+            # base_tailwind_theme
             exit 1
-            #echo "Existing setup with Tailwind setup in frontend"
           ;;
         *) exit 0 ;;
     esac
