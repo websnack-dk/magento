@@ -21,8 +21,7 @@ if [ "$1" == "deploy" ]; then
   bin/magento module:enable --all
 
   message "Disable modules:"
-  bin/magento module:disable Magento_Csp              # disable module
-  bin/magento module:disable Magento_TwoFactorAuth    # disable module
+  bash <(curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/modules/disable_modules)
 
   bin/magento setup:upgrade
   bin/magento setup:static-content:deploy -f
