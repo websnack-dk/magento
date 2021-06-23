@@ -6,7 +6,14 @@ COLOR_RED="$(tput setaf 1)"
 COLOR_YELLOW="$(tput setaf 3)"
 COLOR_BLUE="$(tput setaf 4)"
 
-declare -r VERSION="2.3.0"
+
+release_version () {
+   curl --silent "https://github.com/websnack-dk/magento/releases/latest" | sed 's#.*tag/\(.*\)\".*#\1#'
+}
+
+VERSION="$(release_version)"
+MAGENTO_VERSION="2.4.2-p1"
+
 
 # Is docker installed!?
 if ! command -v docker &> /dev/null; then
@@ -43,10 +50,10 @@ logo() {
   ╚═╝     ╚═╝╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚═╝  ╚═══╝   ╚═╝    ╚═════╝ ╚══════╝"
 
     echo -e "\033[1;33m $logo \033[0m"
-    echo -e "${COLOR_YELLOW}
-                               Project setup
-                                  v$VERSION ${COLOR_REST}
-                           "
+    echo -e "${COLOR_YELLOW}"
+    echo -e "                             Base setup $VERSION"
+    echo -e "${COLOR_REST}"
+
 }
 
 create_elasticsearch() {
@@ -160,8 +167,8 @@ clean_magento2_install() {
       select answer in "Yes" "No"; do
 
           case $answer in
-              "Yes" )
 
+              "Yes" )
                   # Let ddev create some base folders
                   echo "$COLOR_GREEN Installing setup_magento2 script $COLOR_REST"
 
@@ -187,9 +194,11 @@ clean_magento2_install() {
 
                   exit 0
               ;;
+
               "No" )
                   exit 1
               ;;
+
           esac
       done
 
@@ -197,35 +206,49 @@ clean_magento2_install() {
 
 }
 
+# Check version from composer file (output, success=0
+check_magento_version () {
+  grep -q '"magento/product-community-edition": "'$MAGENTO_VERSION'"' "composer.json" && echo $?
+}
+
+
 logo
 
+# Choose setup
 echo -e "${COLOR_YELLOW}Please choose magento2 setup: ${COLOR_REST}"
-
-PS3="Enter choice (number): "
+PS3="Choose setup (enter number): "
 setupOptions=(
-  "Existing"        # Existing setup
+  "Existing"        # Existing magento2 setup
   "New install"     # Fresh clean magento2 install
-  "Base/Tailwind"   # Existing project with Tailwind setup
-  "Quit"
-)
+  "Base/Tailwind"   # Setup existing project with Tailwind setup in app/design/Magento_Theme/web/
+  "Quit")
+
 
 select selectedSetup in "${setupOptions[@]}"; do
 
     case $selectedSetup in
         Existing)
-            #existing_project
-            echo "you chose existing"
+
+            if [ "$(check_magento_version)" == "0" ]; then
+              echo "It's a v.2.4.2 - you chose existing"
+              exit 1
+            fi
+
+            exit
+
           ;;
         "New install")
             # echo "you chose new install"
             clean_magento2_install
-            exit 0
+            exit 1
           ;;
         "Base/Tailwind")
             echo "you chose Base/Tailwind"
-          #echo "Existing setup with Tailwind setup in frontend"
+            exit 1
+            #echo "Existing setup with Tailwind setup in frontend"
           ;;
-        *) exit ;;
+        *) exit 0 ;;
     esac
 
 done
+
