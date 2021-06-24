@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# shellcheck source=./setup/helpers.sh
-source "$(dirname "$0")/setup/helpers.sh"
+# shellcheck source=./setup/helpers
+source "$(dirname "$0")/setup/helpers"
 
 # shellcheck source=./setup/select_option
 source "$(dirname "$0")/setup/select_option"
