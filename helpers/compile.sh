@@ -8,21 +8,23 @@ remove_folders() {
   rm -rf var/view_preprocessed/
   rm -rf pub/static/frontend/
   rm -r generated/*/*
+  rm -rf var/cache
   rm -rf pub/static/*
   rm -rf var/generation
-  rm -rf var/cache
   rm -rf var/page_cache
 }
 
 ## Run first time a project need to be build (Local)
 if [ "$1" == "deploy" ]; then
+
+  rm -rf generated/*
+  rm -rf var/cache/*
   
   message "Enable modules..."
   bin/magento module:enable --all
 
   message "Disable modules:"
-  bin/magento module:disable Magento_Csp              # disable module
-  bin/magento module:disable Magento_TwoFactorAuth    # disable module
+  bash <(curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/modules/disable_modules)
 
   bin/magento setup:upgrade
   bin/magento setup:static-content:deploy -f

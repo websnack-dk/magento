@@ -1,4 +1,5 @@
-<a href="https://github.com/websnack-dk/magento/graphs/commit-activity" target="_blank"><img src="https://img.shields.io/badge/Maintained-yes-green" alt="Maintained - Yes" /></a>
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/websnack-dk/magento?color=blue) ![https://github.com/websnack-dk/magento/graphs/commit-activity](https://img.shields.io/badge/maintained-yes-green)
+
 
 # Script to setup an existing/or- a clean Magento2 installation with DDEV-local.
 
@@ -43,6 +44,8 @@ magento magerun     => Export SQL via. magerun2 and removes n98-magerun2.phar
 m                   => bin/magento 
 composer1           => composer self-update --1
 composer2           => composer self-update --2
+composerup          => composer update
+updatephp           => update-alternatives --config php
 mdev                => bin/magento deploy:mode:set developer
 mclean              => bin/magento cache:clean
 mflush              => bin/magento cache:flush

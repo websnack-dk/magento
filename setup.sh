@@ -55,6 +55,12 @@ function base_ddev_setup() {
     curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/.bashrc  --output .ddev/homeadditions/.bashrc --create-dirs --silent
     echo "$COLOR_GREEN .bashrc added $COLOR_REST"
 
+    # Exclude backup-folder, project-stopped from IDE (Phpstorm)
+    local FOLDER_NAME="${PWD##*/}"
+    curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/phpstorm/exclude_project_stopped.iml  --output ".idea/${FOLDER_NAME}.iml" --create-dirs --silent
+    #sed -i '' "s%\${DDEV_PROJECT}%${FOLDER_NAME}%g" .idea/"${FOLDER_NAME}".iml
+    echo "$COLOR_GREEN Config to exclude backup folder added $COLOR_REST"
+
     # Install pip3 from dockerfile
     if [[ -d ".ddev/web-build" && -f ".ddev/web-build/Dockerfile.example" ]]; then
 
@@ -75,9 +81,9 @@ function retrieve_helpers() {
 
   # Copy files from github
   printf '%s\n' "$COLOR_BLUE Downloading helper files $COLOR_REST"
-  curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/compile.sh   --output  --create-dirs  bin/compile.sh   --silent
-  curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/helpers.sh   --output  --create-dirs  bin/helpers.sh   --silent
-  curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/func.sh      --output  --create-dirs  bin/func.sh      --silent
+  curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/compile.sh   --output  bin/compile.sh  --create-dirs --silent
+  curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/helpers.sh   --output  bin/helpers.sh  --create-dirs --silent
+  curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/func.sh      --output  bin/func.sh     --create-dirs --silent
 
   # make files executable
   chmod +x bin/helpers.sh
@@ -94,7 +100,7 @@ function checklist() {
     echo "###############################################"
     echo
     echo "   1. Import existing SQL"
-    echo "        ddev import-db --src=/tmp/db-file.sql"
+    echo "        ddev import-db                        "
     echo
     echo "----------------------------------------------"
     echo
@@ -103,7 +109,7 @@ function checklist() {
     echo "----------------------------------------------"
     echo
     echo "   3. ddev ssh & run"
-    echo "        magento deploy"
+    echo "        magento deploy                        "
     echo
     echo "$COLOR_REST"
 }
