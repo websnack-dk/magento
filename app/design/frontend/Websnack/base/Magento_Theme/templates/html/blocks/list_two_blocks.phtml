@@ -1,0 +1,23 @@
+<?php
+/** @var $block Template */
+
+use Magento\Cms\Block\Block;
+use Magento\Framework\View\Element\Template;
+
+$blockLayout = $this->getLayout()->createBlock(Block::class);
+
+$outdoorsHTML = $blockLayout->setBlockId("outdoor_training")->toHtml();
+$indoorsHTML  = $blockLayout->setBlockId("indoor_training")->toHtml();
+
+?>
+
+<div class="pb-0 lg:block hidden">
+    <div class="lg:grid lg:grid-cols-2 lg:gap-4 lg:block hidden w-full py-24">
+        <div>
+            <?=$outdoorsHTML?>
+        </div>
+        <div>
+            <?=$indoorsHTML?>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,15 @@
+/*
+//  Tailwind
+_____________________________________________*/
+
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+/*
+//  Custom Styles
+_____________________________________________*/
+
+.debug {
+    @apply border border-red-500 !important;
+}

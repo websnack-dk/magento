@@ -1,0 +1,12 @@
+
+<?php
+/** @var $block Template */
+
+use Magento\Cms\Block\Block;
+use Magento\Framework\View\Element\Template;
+
+?>
+
+<div class="mb-32 px-8 lg:px-0">
+    <?= $this->getLayout()->createBlock(Block::class)->setBlockId("popular_products")->toHtml() ?>
+</div>

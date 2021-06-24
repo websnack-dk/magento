@@ -1,0 +1,16 @@
+<?php
+/** @var $block Template */
+
+use Magento\Cms\Block\Block;
+use Magento\Framework\View\Element\Template;
+
+$blockLayout    = $this->getLayout()->createBlock(Block::class);
+$footerUspHTML  = $blockLayout->setBlockId("footer_usp_info")->toHtml();
+
+?>
+
+<div class="container lg:pb-16 lg:pt-24">
+    <div class="flex flex-wrap justify-between text-center py-20 lg:py-0">
+        <?= $footerUspHTML ?>
+    </div>
+</div>

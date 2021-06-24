@@ -1,0 +1,64 @@
+<?php
+
+/** @var $block Template */
+
+use Magento\Cms\Block\Block;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\View\Element\Template;
+
+use Mageplaza\Productslider\Block\NewProducts;
+
+use Kommerce\isHomePage\Block\isHomePage;
+use Magento\Framework\App\ObjectManager;
+
+$objectManager = ObjectManager::getInstance();
+$amIHome = $objectManager->get(isHomePage::class);
+
+$newsletterContent  = $this->getLayout()->createBlock(Block::class)->setBlockId("footer_newsletter")->toHtml();
+$newsletterHTML     = $this->getLayout()->createBlock(Magento\Newsletter\Block\Subscribe::class)->setTemplate("Magento_Newsletter::subscribe.phtml")->setTitle("Test")->toHtml();
+
+if ($amIHome->isHomePage()): ?>
+
+    <?php try {
+
+        echo  $this->getLayout()->createBlock(Block::class)->setBlockId("product_news")->toHtml();
+
+    } catch (LocalizedException $e) {
+        throw new RuntimeException($e->getMessage());
+    } ?>
+
+    <div class="w-full bg-blue-500 mt-32">
+        <div class="relative w-full">
+            <div class="z-0 w-full">
+                <div class="relative py-24 lg:py-0 bg-no-repeat bg-cover lg:bg-fill bg-center" style="background-image: url(<?=$this->getViewFileUrl('images/newsletter-background.jpg') ?>);">
+                    <div class="relative z-10 lg:mx-auto lg:container">
+                        <div class="md:py-32 lg:w-full">
+                            <div class="flex justify-end">
+                                <div class="px-24 lg:ml-0 lg:px-0 lg:w-7/12">
+                                    <div class="text-primary border-primary border-t-2 pt-8 w-40 py-4"></div>
+                                    <?=$newsletterContent?>
+                                    <br>
+                                    <?=$newsletterHTML?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php else: ?>
+    <div class="w-full bg-gray-500 pt-32 pb-24">
+        <div class="container">
+            <div class="flex flex-wrap items-center">
+                <div class="lg:w-6/12 lg:px-0 px-8 w-full">
+                    <div class="text-primary border-primary border-t-2 pt-8 w-40 py-4"></div>
+                    <?=$newsletterContent?>
+                </div>
+                <div class="lg:w-6/12 lg:px-0 px-8 w-full mt-4 lg:mt-0">
+                    <?=$newsletterHTML?>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php endif; ?>

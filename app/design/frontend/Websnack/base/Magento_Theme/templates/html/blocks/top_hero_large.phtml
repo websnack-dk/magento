@@ -1,0 +1,34 @@
+<?php
+/** @var $block Template */
+
+use Magento\Cms\Block\Block;
+use Magento\Framework\View\Element\Template;
+
+$front_main_highlight                   = $this->getLayout()->createBlock(Block::class)->setBlockId("front_main_highlight")->toHtml();
+$front_main_highlight_top_right         = $this->getLayout()->createBlock(Block::class)->setBlockId("front_main_hightlight_top_right")->toHtml();
+$front_main_hightlight_top_right_bottom = $this->getLayout()->createBlock(Block::class)->setBlockId("front_main_hightlight_top_right_bottom")->toHtml();
+
+?>
+<div class="lg:mt-0 mt-24">
+    <div class="grid lg:grid-cols-2 lg:gap-4 grid-cols-1 lg:mb-10 mt-6">
+
+        <div class="lg:bg-black lg:p-0 pb-16">
+            <div class="relative bg-black min-h-full h-full z-0 w-full lg:flex lg:justify-center lg:items-center">
+                <?= $front_main_highlight ?>
+            </div>
+        </div>
+        <div class="hidden lg:block">
+            <div class="grid grid-cols-1 gap-4">
+
+                    <div class="relative bg-black">
+                        <?= $front_main_highlight_top_right ?>
+                    </div>
+                    <div class="relative bg-black">
+                        <?= $front_main_hightlight_top_right_bottom ?>
+                    </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>

@@ -1,0 +1,8 @@
+
+<?php
+/** @var $block Template */
+
+use Magento\Cms\Block\Block;
+use Magento\Framework\View\Element\Template;
+
+echo $this->getLayout()->createBlock(Block::class)->setBlockId("product_news")->toHtml();

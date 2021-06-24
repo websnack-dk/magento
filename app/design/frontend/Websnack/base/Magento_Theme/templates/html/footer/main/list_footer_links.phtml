@@ -1,0 +1,48 @@
+<?php
+/** @var $block Template */
+
+use Magento\Cms\Block\Block;
+use Magento\Framework\View\Element\Template;
+
+$blockLayout = $this->getLayout()->createBlock(Block::class);
+
+$footerHTML1    = $blockLayout->setBlockId("footer_short_info")->toHtml();
+$footerHTML2    = $blockLayout->setBlockId("footer_shortcuts")->toHtml();
+$footerHTML3    = $blockLayout->setBlockId("footer_customer_service")->toHtml();
+$footerHTML4    = $blockLayout->setBlockId("footer_opening_hours")->toHtml();
+$footerHTML5    = $blockLayout->setBlockId("footer_contact")->toHtml();
+
+?>
+
+<div class="pt-32 pb-40 bg-no-repeat" style="background-image: url(<?=$this->getViewFileUrl('images/footer_bg.png')?>); background-position: right -25px;">
+    <div class="container">
+        <div class="flex flex-wrap lg:justify-between text-white lg:px-0 px-16">
+            <div class="lg:mr-4 my-2 px-2 sm:my-2 sm:px-2 md:my-2 md:px-2 md:w-3/12 sm:w-6/12 lg:my-2 lg:px-2 xl:my-2 xl:px-2 md:w-3/12 lg:w-3/12">
+                <div class="border-t-2 border-primary pt-8 w-40 py-4"></div>
+                <?= $footerHTML1 ?>
+            </div>
+            <div class="my-2 px-2 w-1/2 sm:my-2 sm:px-2 md:my-2 md:px-2 md:w-2/12 lg:my-2 lg:px-2 xl:my-2 xl:px-2 md:w-3/12 lg:w-1/12">
+                <div class="border-t-2 border-primary pt-8 w-40 py-4"></div>
+                <?= $footerHTML2 ?>
+            </div>
+            <div class="lg:ml-6 my-2 px-2 w-1/2 sm:my-2 sm:px-2 md:my-2 md:px-2 md:w-2/12 lg:my-2 lg:px-2 xl:my-2 xl:px-2 md:w-3/12 lg:w-2/12">
+                <div class="lg:ml-16 ml-8 border-t-2 border-primary pt-8 w-40 py-4"></div>
+                <?= $footerHTML3 ?>
+            </div>
+            <div class="my-2 px-2 w-1/2 sm:my-2 sm:px-2 md:my-2 md:px-2 md:w-2/12 lg:my-2 lg:px-2 xl:my-2 xl:px-2 md:w-3/12 lg:w-2/12">
+                <div class="border-t-2 border-primary pt-8 w-40 py-4"></div>
+                <?= $footerHTML4 ?>
+
+            </div>
+            <div class="lg:ml-16 my-2 px-2 w-1/2 sm:my-2 sm:px-2 md:my-2 md:px-2 md:w-3/12 lg:my-2 lg:px-2 xl:my-2 xl:px-2md:w-3/12 lg:w-2/12">
+                <div class="lg:ml-0 ml-6 border-t-2 border-primary pt-8 w-40 py-4"></div>
+                <?= $footerHTML5 ?>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="w-full bg-white">
+    <div class="container py-8 flex justify-center">
+        Footer image or other stuff
+    </div>
+</div>

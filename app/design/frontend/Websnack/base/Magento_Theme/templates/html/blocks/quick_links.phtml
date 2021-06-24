@@ -1,0 +1,13 @@
+<?php
+/** @var $block Template */
+
+use Magento\Cms\Block\Block;
+use Magento\Framework\View\Element\Template;
+
+$quickLinksHTML = $this->getLayout()->createBlock(Block::class)->setBlockId("top_quick_links")->toHtml();
+
+?>
+
+<div class="container lg:mb-24 mb-16 px-8 lg:px-0">
+    <?=$quickLinksHTML?>
+</div>

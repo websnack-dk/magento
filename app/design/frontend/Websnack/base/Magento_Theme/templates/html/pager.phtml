@@ -1,0 +1,147 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+/**
+ * Pager template
+ *
+ * @see \Magento\Theme\Block\Html\Pager
+ */
+?>
+<?php if ($block->getCollection()->getSize()): ?>
+
+    <?php if ($block->getUseContainer()): ?>
+        <div class="pager">
+    <?php endif ?>
+
+    <?php if ($block->getShowAmounts()): ?>
+        <p class="toolbar-amount">
+            <span class="toolbar-number">
+            <?php if ($block->getLastPageNum()>1): ?>
+                <?= $block->escapeHtml(
+                    __('Items %1 to %2 of %3 total', $block->getFirstNum(), $block->getLastNum(), $block->getTotalNum())
+                ) ?>
+            <?php elseif ($block->getTotalNum() == 1): ?>
+                <?= $block->escapeHtml(__('%1 Item', $block->getTotalNum())) ?>
+            <?php else: ?>
+                <?= $block->escapeHtml(__('%1 Item(s)', $block->getTotalNum())) ?>
+            <?php endif; ?>
+            </span>
+        </p>
+    <?php endif ?>
+
+    <?php if ($block->getLastPageNum()>1): ?>
+        <div class="pages">
+            <strong class="label pages-label" id="paging-label"><?= $block->escapeHtml(__('Page')) ?></strong>
+            <ul class="items pages-items" aria-labelledby="paging-label">
+                <?php if (!$block->isFirstPage()): ?>
+                    <li class="item">
+                        <?php $text = $block->getAnchorTextForPrevious() ?: '';?>
+                        <div class="lg:absolute lg:-mt-6 lg:-ml-8">
+                            <a class="text-black <?= $block->escapeHtmlAttr($text ? 'link ' : '') ?> previous"
+                               href="<?= $block->escapeUrl($block->getPreviousPageUrl()) ?>"
+                               title="<?= $block->escapeHtmlAttr($text ?: __('Previous')) ?>">
+                                <span class="label"><?= $block->escapeHtml(__('Page')) ?></span>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                                </svg>
+                            </a>
+                        </div>
+                    </li>
+                <?php endif;?>
+
+                <?php if ($block->canShowFirst()): ?>
+                    <li class="item border-gray-300 px-4 text-primary hover:bg-gray-50 relative items-center border inline-block">
+                        <a class="text-black rounded-full border px-5 font-normal" href="<?= $block->escapeUrl($block->getFirstPageUrl()) ?>">
+                            <span class="label"><?= $block->escapeHtml(__('Page')) ?></span>
+                            <span>1</span>
+                        </a>
+                    </li>
+                <?php endif;?>
+
+                <?php if ($block->canShowPreviousJump()): ?>
+                    <li class="item">
+                        <a class="page previous jump text-black"
+                           title=""
+                           href="<?= $block->escapeUrl($block->getPreviousJumpUrl()) ?>">
+                            <span>...</span>
+                        </a>
+                    </li>
+                <?php endif;?>
+
+                <?php foreach ($block->getFramePages() as $_page): ?>
+                    <?php if ($block->isPageCurrent($_page)): ?>
+                        <li class="item">
+                            <strong class="page text-black rounded-full border px-5">
+                                <span class="label"><?= $block->escapeHtml(__('You\'re currently reading page')) ?></span>
+                                <span><?= $block->escapeHtml($_page) ?></span>
+                            </strong>
+                        </li>
+                    <?php else: ?>
+                        <li class="item border-0 item ">
+                            <a href="<?= $block->escapeUrl($block->getPageUrl($_page)) ?>" class="page text-black font-normal px-4">
+                                <span class="label"><?= $block->escapeHtml(__('Page')) ?></span>
+                                <span><?= $block->escapeHtml($_page) ?></span>
+                            </a>
+                        </li>
+                    <?php endif;?>
+                <?php endforeach;?>
+
+                <?php if ($block->canShowNextJump()): ?>
+                    <li class="item">
+                        <a class="page next jump" title="" href="<?= $block->escapeUrl($block->getNextJumpUrl()) ?>">
+                            <span>...</span>
+                        </a>
+                    </li>
+                <?php endif;?>
+
+                <?php if ($block->canShowLast()): ?>
+                    <li class="item">
+                        <a class="page last" href="<?= $block->escapeUrl($block->getLastPageUrl()) ?>">
+                            <span class="label"><?= $block->escapeHtml(__('Page')) ?></span>
+                            <span><?= $block->escapeHtml($block->getLastPageNum()) ?></span>
+                        </a>
+                    </li>
+                <?php endif;?>
+
+                <?php if (!$block->isLastPage()): ?>
+                    <li class="item">
+                        <?php $text = $block->getAnchorTextForNext() ?: '';?>
+                        <div class="lg:absolute lg:-mt-6">
+                            <a class="text-black <?= /* @noEscape */ $text ? 'link ' : '' ?> next"
+                               href="<?= $block->escapeUrl($block->getNextPageUrl()) ?>"
+                               title="<?= $block->escapeHtmlAttr($text ?: __('Next')) ?>">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                                </svg>
+                            </a>
+                        </div>
+                    </li>
+                <?php endif;?>
+            </ul>
+        </div>
+    <?php endif; ?>
+
+    <?php if ($block->isShowPerPage()): ?>
+        <div class="limiter">
+            <strong class="limiter-label"><?= $block->escapeHtml(__('Show')) ?></strong>
+            <select id="limiter" data-mage-init='{"redirectUrl": {"event":"change"}}' class="limiter-options">
+                <?php foreach ($block->getAvailableLimit() as $_key => $_limit): ?>
+                    <option value="<?= $block->escapeUrl($block->getLimitUrl($_key)) ?>"
+                        <?php if ($block->isLimitCurrent($_key)): ?>
+                            selected="selected"<?php endif ?>>
+                        <?= $block->escapeHtml($_limit) ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+            <span class="limiter-text"><?= $block->escapeHtml(__('per page')) ?></span>
+        </div>
+    <?php endif ?>
+
+    <?php if ($block->getUseContainer()): ?>
+        </div>
+    <?php endif ?>
+
+<?php endif ?>

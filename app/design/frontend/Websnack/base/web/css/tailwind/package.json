@@ -1,0 +1,26 @@
+{
+  "name": "tailwind",
+  "version": "1.0.0",
+  "description": "Tailwind CSS Compiler",
+  "main": "tailwind.config.js",
+  "dependencies": {
+    "postcss-import": "latest",
+    "postcss-nested": "latest"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.2.6",
+    "cssnano": "^5.0.6",
+    "csso-cli": "^3.0.0",
+    "postcss": "^8.3.5",
+    "postcss-cli": "^8.3.1",
+    "tailwind-config-viewer": "^1.6.2",
+    "tailwindcss": "^2.2.2"
+  },
+  "scripts": {
+    "build": "npx postcss tailwind-source.css -o  ../styles.css",
+    "tailwind-config-viewer": "tailwind-config-viewer -o"
+  },
+  "author": "William Engbjerg - Websnack",
+  "license": "MIT",
+  "private": true
+}

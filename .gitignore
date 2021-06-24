@@ -2,4 +2,4 @@
 .ddev/
 bin/*
 .idea
-/app
+/app/etc/env.php
