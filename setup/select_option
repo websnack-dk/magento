@@ -27,8 +27,11 @@ function select_option {
     for opt; do printf "\n"; done
 
     # determine current screen position for overwriting the options
-    local lastrow=$(get_cursor_row)
-    local startrow=$(($lastrow - $#))
+    local startRow
+    local lastRow
+
+    lastRow=$(get_cursor_row)
+    startRow=$((lastRow - $#))
 
     # ensure cursor and input echoing back on upon a ctrl+c during read -s
     #trap "cursor_blink_on; stty echo; printf '\n'; exit" 2
@@ -39,7 +42,7 @@ function select_option {
         # print options by overwriting the last lines
         local idx=0
         for opt; do
-            cursor_to $(($startrow + $idx))
+            cursor_to $((startRow + $idx))
             if [ $idx -eq $selected ]; then
                 print_selected "$opt"
             else
@@ -59,7 +62,7 @@ function select_option {
     done
 
     # cursor position back to normal
-    cursor_to "$lastrow"
+    cursor_to "$lastRow"
     printf "\n"
     cursor_blink_on
     return $selected
