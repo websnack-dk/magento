@@ -46,7 +46,6 @@ install_mutagen() {
 }
 
 base_ddev_setup() {
-
     curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/.bashrc            --output .ddev/homeadditions/.bashrc  --create-dirs --silent
     curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/config.local.yaml   --output .ddev/config.local.yaml       --silent
     echo "$COLOR_GREEN Added .bashrc & config.local.yaml $COLOR_REST"
@@ -170,20 +169,16 @@ setup_tailwind_theme() {
 
 logo
 
-
 # Choose setup
-echo -e "${COLOR_YELLOW}=============================="
-echo -e "Please choose magento2 setup                 "
-echo -e "==============================${COLOR_REST}"
-
 PS3="Choose setup (enter number): "
-
 setupOptions=(
   "1. Setup Script (Existing Project)"
   "2. With Observer (Existing project)"
   "3. Integrate Tailwindcss (Existing project)"
   "4. Clean Magento2 Install (v2.4.2)"
   "5. Quit")
+
+# echo -e "========================================================================="
 
 case $(select_opt "${setupOptions[@]}") in
 

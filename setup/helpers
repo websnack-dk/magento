@@ -64,7 +64,9 @@ logo() {
 
     echo -e "\033[1;33m $logo \033[0m"
     echo -e "${COLOR_YELLOW}"
+    echo -e "========================================================================="
     echo -e "                             Base setup $VERSION"
+    echo -e "                           Choose project setup                     "
+    echo -e "========================================================================="
     echo -e "${COLOR_REST}"
-
 }
