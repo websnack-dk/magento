@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+
+
+/* 
+	Custom code below 
+	https://tailwindcss.com/docs/installation#using-a-custom-css-file
+*/
+
+
+@tailwind utilities;

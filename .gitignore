@@ -1,5 +1,9 @@
 *.DS_Store
 .ddev/
 bin/*
+pub/*
 .idea
 /app/etc/env.php
+/app
+/__setup__
+/composer.json

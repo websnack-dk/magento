@@ -2,9 +2,6 @@
 
 ## Description: Disable modules on current project. With command "magento deploy"
 
-bin/magento module:disable Magento_Csp
-bin/magento module:disable Magento_TwoFactorAuth
-
 # Disable Magento MSI 2.4.2
 bin/magento module:disable -f Magento_Inventory
 bin/magento module:disable -f Magento_InventoryAdminUi
