@@ -1,14 +1,8 @@
 #!/bin/bash
 
 # Run setup
-bash <(curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/setup/helpers.sh)
-bash <(curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/setup/select_option)
-
-# shellcheck source=./setup/helpers.sh
-#source "$(dirname "$0")/setup/helpers.sh"
-
-# shellcheck source=./setup/select_option
-#source "$(dirname "$0")/setup/select_option"
+source <(curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/setup/helpers.sh)
+source <(curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/setup/select_option)
 
 # Is docker installed!?
 if ! command -v docker &> /dev/null; then
