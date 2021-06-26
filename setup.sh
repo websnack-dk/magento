@@ -115,7 +115,6 @@ setup_existing_project() {
   base_ddev_setup
   install_mutagen
   checklist
-  exit 0
 }
 setup_clean_magento2_install() {
 
