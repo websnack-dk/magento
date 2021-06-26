@@ -198,7 +198,7 @@ case $(select_opt "${setupOptions[@]}") in
     1)
         is_existing_project
         remove_setup_folder
-        setup_setup_existing_project
+        setup_existing_project
         add_watch_observer
         install_observer
     ;;
