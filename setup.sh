@@ -9,7 +9,7 @@ source "$(dirname "$0")/setup/select_option"
 # Is docker installed!?
 if ! command -v docker &> /dev/null; then
     # Prompt for auto install or exit
-    printf '%s' "$COLOR_RED Docker not found. Install it. $COLOR_REST"
+    printf '%s' "$COLOR_RED [X] Docker not found. Install it. $COLOR_REST"
     echo "$COLOR_BLUE https://docs.docker.com/desktop/ $COLOR_REST"
     exit 1
 fi
@@ -17,7 +17,7 @@ fi
 # Check if DDEV is installed in system
 if ! command -v ddev &> /dev/null; then
     # Prompt for auto install or exit
-    read -r -p "$COLOR_RED DDEV not found $COLOR_REST $COLOR_GREEN Do you want to install DDEV? (Y/n) $COLOR_REST" answer
+    read -r -p "$COLOR_RED [X] DDEV not found $COLOR_REST $COLOR_GREEN [?] Do you want to install DDEV? (Y/n) $COLOR_REST" answer
     case ${answer:0:1} in
       y|Y|Yes )
           brew install drud/ddev/ddev

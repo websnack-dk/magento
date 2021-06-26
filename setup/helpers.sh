@@ -12,7 +12,7 @@ COLOR_YELLOW="$(tput setaf 3)"
 COLOR_BLUE="$(tput setaf 4)"
 
 VERSION="$(release_version)"
-MAGENTO_VERSION="2.4.2-p1"
+MAGENTO_VERSION="2.4.2"
 
 
 error_message() {
