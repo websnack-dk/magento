@@ -4,6 +4,8 @@
 curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/setup/helpers.sh     --output __setup__/helpers.sh     --create-dirs --silent
 curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/setup/select_option  --output __setup__/select_option  --create-dirs --silent
 
+sleep 0.5
+
 # shellcheck source=./__setup__/helpers.sh
 source "$(dirname "$0")/__setup__/helpers.sh"
 # shellcheck source=./__setup__/select_option
@@ -185,14 +187,14 @@ case $(select_opt "${setupOptions[@]}") in
     ## Base setup
     0)
         is_existing_project
-        remove_setup_folder
+        # remove_setup_folder
         setup_existing_project
     ;;
 
     ## With observer/watcher
     1)
         is_existing_project
-        remove_setup_folder
+        # remove_setup_folder
         setup_setup_existing_project
         add_watch_observer
         install_observer
@@ -202,17 +204,17 @@ case $(select_opt "${setupOptions[@]}") in
     2)
         is_existing_project
         remove_setup_folder
-        setup_tailwind_theme
+        # setup_tailwind_theme
     ;;
 
     ## Clean magento2 install
     3)
         setup_clean_magento2_install
-        remove_setup_folder
+        # remove_setup_folder
     ;;
 
     *)
-      remove_setup_folder
+      # remove_setup_folder
       exit 1
     ;;
 esac
