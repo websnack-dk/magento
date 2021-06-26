@@ -135,7 +135,7 @@ setup_clean_magento2_install() {
 
                   ddev config --project-type=magento2 --docroot=pub --create-docroot
                   mkdir -p .ddev/commands/web/
-                  curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/setup_clean_magento2_install   --output .ddev/commands/web/setup_clean_magento2_install  --silent
+                  curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/clean_magento2_install         --output .ddev/commands/web/setup_clean_magento2_install  --silent
                   curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/.gitignore                     --output .gitignore                                       --silent
 
                   if [ ! -f "composer.json" ]; then
