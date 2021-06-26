@@ -120,7 +120,9 @@ setup_existing_project() {
   install_mutagen
 
   checklist
+  remove_setup_folder
 }
+
 setup_clean_magento2_install() {
 
   # Fresh clean magento2 install
@@ -155,6 +157,7 @@ setup_clean_magento2_install() {
 
                   ddev start
                   ddev setup_clean_magento2_install
+                  remove_setup_folder
 
                   exit 0
               ;;
@@ -212,7 +215,6 @@ case $(select_opt "${setupOptions[@]}") in
     ## Clean magento2 install
     3)
         setup_clean_magento2_install
-        remove_setup_folder
     ;;
 
     *)
@@ -220,5 +222,3 @@ case $(select_opt "${setupOptions[@]}") in
       exit 1
     ;;
 esac
-
-
