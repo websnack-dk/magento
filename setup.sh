@@ -10,9 +10,9 @@ chmod +x __setup__/helpers.sh
 chmod +x __setup__/select_option
 
 # shellcheck source=./__setup__/helpers.sh
-source "__setup__/helpers.sh"
+source __setup__/helpers.sh
 # shellcheck source=./__setup__/select_option
-source "__setup__/select_option"
+source __setup__/select_option
 
 # Is docker installed!?
 if ! command -v docker &> /dev/null; then
