@@ -4,4 +4,5 @@ bin/*
 pub/*
 .idea
 /app
+/__setup__
 /composer.json

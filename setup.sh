@@ -1,8 +1,13 @@
 #!/bin/bash
 
-# Run setup
-source <(curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/setup/helpers.sh)
-source <(curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/setup/select_option)
+# Setup
+curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/setup/helpers.sh     --output __setup__/helpers.sh     --create-dirs --silent
+curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/setup/select_option  --output __setup__/select_option  --create-dirs --silent
+
+# shellcheck source=./__setup__/helpers.sh
+source "$(dirname "$0")/__setup__/helpers.sh"
+# shellcheck source=./__setup__/select_option
+source "$(dirname "$0")/__setup__/select_option"
 
 # Is docker installed!?
 if ! command -v docker &> /dev/null; then
@@ -161,6 +166,10 @@ setup_tailwind_theme() {
   exit 0
 }
 
+remove_setup_folder() {
+  rm -rf __setup__
+}
+
 logo
 
 ## Setup choices
@@ -176,12 +185,14 @@ case $(select_opt "${setupOptions[@]}") in
     ## Base setup
     0)
         is_existing_project
+        remove_setup_folder
         setup_existing_project
     ;;
 
     ## With observer/watcher
     1)
         is_existing_project
+        remove_setup_folder
         setup_setup_existing_project
         add_watch_observer
         install_observer
@@ -190,13 +201,20 @@ case $(select_opt "${setupOptions[@]}") in
     ## Setup tailwind theme
     2)
         is_existing_project
+        remove_setup_folder
         setup_tailwind_theme
     ;;
 
     ## Clean magento2 install
     3)
         setup_clean_magento2_install
+        remove_setup_folder
     ;;
 
-    *) exit 1 ;;
+    *)
+      remove_setup_folder
+      exit 1
+    ;;
 esac
+
+

@@ -11,7 +11,7 @@ alias magento="bin/compile.sh"
 alias updatephp="update-alternatives --config php"
 alias composer1="composer self-update --1"
 alias composer2="composer self-update --2"
-alias composerup="composer update"
+alias comup="composer update"
 
 alias m="bin/magento"
 alias mdev="bin/magento deploy:mode:set developer"
