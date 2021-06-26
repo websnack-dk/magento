@@ -18,7 +18,7 @@ config
 ${DDEV_APPROOT} mv app/etc/env.php app/etc/temp_env.php
 
 # install magento2
-${DDEV_APPROOT} bin/magento setup:install --base-url=https://${DDEV_SITENAME}.ddev.site/ --db-host=db --db-name=db --db-user=db --db-password=db --elasticsearch-host=elasticsearch --admin-firstname=Magento --admin-lastname=User --admin-email=admin@admin.com --admin-user=admin --admin-password=admin123 --language=en_US
+${DDEV_APPROOT} bin/magento setup:install --base-url=https://${DDEV_SITENAME}.ddev.site:${DDEV_ROUTER_HTTPS_PORT}/ --db-host=db --db-name=db --db-user=db --db-password=db --elasticsearch-host=elasticsearch --admin-firstname=Magento --admin-lastname=User --admin-email=admin@admin.com --admin-user=admin --admin-password=admin123 --language=en_US
 
 # setup clean install
 ${DDEV_APPROOT} bin/magento deploy:mode:set developer
