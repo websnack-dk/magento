@@ -23,6 +23,14 @@ bash <(curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/setup.
 
 Installing a clean magento2 project requires **Access Keys** (public/private) from [marketplace.magento.com](https://marketplace.magento.com/)
 
+---
+
+### Admin info
+
+Admin url: /admin_y312l0  
+User: admin@admin.com  
+Pass: admin123  
+
 --- 
 
 ## Helpers
