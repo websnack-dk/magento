@@ -6,7 +6,6 @@ source "$(dirname "$0")/setup/helpers.sh"
 # shellcheck source=./setup/select_option
 source "$(dirname "$0")/setup/select_option"
 
-
 # Is docker installed!?
 if ! command -v docker &> /dev/null; then
     # Prompt for auto install or exit
@@ -18,7 +17,7 @@ fi
 # Check if DDEV is installed in system
 if ! command -v ddev &> /dev/null; then
     # Prompt for auto install or exit
-    read -r -p "$COLOR_RED DDEV not found.$COLOR_REST $COLOR_GREEN Do you want to install? (Y/n) $COLOR_REST" answer
+    read -r -p "$COLOR_RED DDEV not found $COLOR_REST $COLOR_GREEN Do you want to install DDEV? (Y/n) $COLOR_REST" answer
     case ${answer:0:1} in
       y|Y|Yes )
           brew install drud/ddev/ddev
@@ -74,10 +73,10 @@ retrieve_helpers() {
 install_observer() {
 
   if [ ! -f ".ddev/commands/web/observer" ]; then
-    printf '%s\n' "$COLOR_GREEN [!] Adding observer setup $COLOR_REST"
+    printf '%s\n' "$COLOR_GREEN [√] Adding observer setup $COLOR_REST"
     curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/observer --output .ddev/commands/web/observer --create-dirs --silent
     ddev observer
-    printf '%s\n' "$COLOR_GREEN Virtualenv has been setup $COLOR_REST"
+    printf '%s\n' "$COLOR_GREEN [√] Virtualenv has been setup $COLOR_REST"
   fi
 }
 add_watch_observer() {
@@ -95,7 +94,7 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y -o Dpkg:
 RUN pip3
 config
 
-        printf '%s\n' "$COLOR_GREEN Dockerfile added in web-build $COLOR_REST"
+        printf '%s\n' "$COLOR_GREEN [√] Dockerfile added $COLOR_REST"
     fi
 }
 
@@ -108,6 +107,7 @@ setup_existing_project() {
   base_ddev_setup
   install_mutagen
   checklist
+  exit 0
 }
 setup_clean_magento2_install() {
 
@@ -123,7 +123,7 @@ setup_clean_magento2_install() {
 
               "Yes" )
                   # Let ddev create some base folders
-                  echo "$COLOR_GREEN [@] Installing magento2 $COLOR_REST"
+                  echo "$COLOR_YELLOW [!] Installing magento2 $COLOR_REST"
 
                   ddev config --project-type=magento2 --docroot=pub --create-docroot
                   mkdir -p .ddev/commands/web/
@@ -132,7 +132,7 @@ setup_clean_magento2_install() {
 
                   if [ ! -f "composer.json" ]; then
                     ddev start
-                    ddev composer create --repository=https://repo.magento.com/ magento/project-community-edition
+                    ddev composer create --repository=https://repo.magento.com/ magento/project-community-edition=2.4.2
                     ddev stop
                   fi
 
@@ -159,7 +159,8 @@ setup_clean_magento2_install() {
 }
 
 setup_tailwind_theme() {
-  echo "CURL TAILWIND THEME & Setup base";
+  echo "$COLOR_YELLOW [!] Tailwind setup script is not yet ready $COLOR_REST";
+  exit 0
 }
 
 logo
@@ -170,7 +171,7 @@ setupOptions=(
   "2. With Observer (Existing project)"
   "3. Integrate Tailwindcss (Existing project)"
   "4. Clean Magento2 Install (v2.4.2)"
-  "5. Quit")
+  "Quit")
 
 case $(select_opt "${setupOptions[@]}") in
 
@@ -178,7 +179,6 @@ case $(select_opt "${setupOptions[@]}") in
     0)
         is_existing_project
         setup_existing_project
-        exit 0
     ;;
 
     ## With observer/watcher
@@ -193,7 +193,6 @@ case $(select_opt "${setupOptions[@]}") in
     2)
         is_existing_project
         setup_tailwind_theme
-        exit 0
     ;;
 
     ## Clean magento2 install
