@@ -27,7 +27,7 @@ Installing a clean magento2 project requires **Access Keys** (public/private) fr
 
 ### Admin info
 
-Admin url: /admin_y312l0  
+Admin url, auto generated. Check `app/ect/env.php`  
 User: admin@admin.com  
 Pass: admin123  
 
