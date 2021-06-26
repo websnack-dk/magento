@@ -4,8 +4,6 @@
 curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/setup/helpers.sh     --output __setup__/helpers.sh     --create-dirs --silent
 curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/setup/select_option  --output __setup__/select_option  --create-dirs --silent
 
-sleep 0.5
-
 chmod +x __setup__/helpers.sh
 chmod +x __setup__/select_option
 
@@ -114,6 +112,12 @@ setup_existing_project() {
   create_elasticsearch
   base_ddev_setup
   install_mutagen
+
+  if [ "$1" == "with observer" ]; then
+      add_watch_observer
+      install_observer
+  fi
+
   checklist
 }
 setup_clean_magento2_install() {
@@ -189,23 +193,18 @@ case $(select_opt "${setupOptions[@]}") in
     ## Base setup
     0)
         is_existing_project
-        remove_setup_folder
         setup_existing_project
     ;;
 
     ## With observer/watcher
     1)
         is_existing_project
-        remove_setup_folder
-        setup_existing_project
-        add_watch_observer
-        install_observer
+        setup_existing_project "with observer"
     ;;
 
     ## Setup tailwind theme
     2)
         is_existing_project
-        remove_setup_folder
         setup_tailwind_theme
     ;;
 
