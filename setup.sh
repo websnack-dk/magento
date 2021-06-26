@@ -6,6 +6,9 @@ curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/setup/select_
 
 sleep 0.5
 
+chmod +x __setup__/helpers.sh
+chmod +x __setup__/select_option
+
 # shellcheck source=./__setup__/helpers.sh
 source "$(dirname "$0")/__setup__/helpers.sh"
 # shellcheck source=./__setup__/select_option
