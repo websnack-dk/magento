@@ -1,11 +1,11 @@
 #!/bin/bash
 
 # Add watcher script
-curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/Watcher/Watcher.py -o Watcher/Watcher.py --create-dirs
+curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/watcher/watcher.py -o watcher/watcher.py --create-dirs
 
 # make files executable
-chmod +x /var/www/html/Watcher/Watcher.py
+chmod +x /var/www/html/watcher/watcher.py
 
 # Setup file observer
-cd /var/www/html/Watcher && sudo pip3 install virtualenv
-cd /var/www/html/Watcher && virtualenv -p /usr/bin/python3 venv
+cd /var/www/html/watcher && sudo pip3 install virtualenv
+cd /var/www/html/watcher && virtualenv -p /usr/bin/python3 venv

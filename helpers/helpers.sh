@@ -27,7 +27,7 @@ function install_or_update_composer_packages() {
   composer require spatie/ray
 
   ## If true: Setup, Upgrade after install ##
-  setUpgrade=$1
+  local setUpgrade=$1
 
   if [ "$setUpgrade" == true ]; then
       message "Setup: Deploy, reindex, clean & flush "

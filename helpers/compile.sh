@@ -19,12 +19,16 @@ if [ "$1" == "deploy" ]; then
 
   rm -rf generated/*
   rm -rf var/cache/*
-  
+
   message "Enable modules..."
   bin/magento module:enable --all
 
   message "Disable modules:"
-  bash <(curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/modules/disable_modules)
+  bin/magento module:disable Magento_Csp
+  bin/magento module:disable Magento_TwoFactorAuth
+
+  # Disable modules: MSI
+  # bash <(curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/modules/disable_modules)
 
   bin/magento setup:upgrade
   bin/magento setup:static-content:deploy -f
@@ -33,10 +37,10 @@ if [ "$1" == "deploy" ]; then
   bin/magento indexer:reindex
   bin/magento cache:clean
   bin/magento cache:flush
-  
+
   message "Enable Developer mode"
   bin/magento deploy:mode:set developer
-  
+
   message "Deployed"
 
 ## Install base repositories
@@ -44,7 +48,7 @@ elif [ "$1" == "composer" ]; then
   install_or_update_composer_packages false
 
 ## Dump SQL with magerun2
-elif [ "$1" == "magerun" ]; then
+elif [ "$1" == "dump-db" ]; then
 
   MAGE_DIR=./n98-magerun2.phar
 
@@ -59,7 +63,7 @@ elif [ "$1" == "magerun" ]; then
 
   ## Export SQL
   # ./n98-magerun2.phar db:dump --strip="@development" # Development
-  # n98-magerun2.phar db:dump --compression="gzip" # full-zip
+  n98-magerun2.phar db:dump --compression="gzip" # full-zip
 
   ## CleanUp: Forget and remove n98-magerun2.phar
   rm -rf ./n98-magerun2.phar
@@ -93,19 +97,11 @@ elif [ "$1" == "tailwind" ]; then
   # remove generated folders
   remove_folders
 
-  # Compile LESS files
-  # message "Compiling: Gulp Exec.."
-  # gulp exec --base
-
-  # Compile LESS files
-  # message "Compiling: Gulp LESS.."
-  # gulp less --base
-
   # compile tailwindcss
   message "Compiling: Tailwind.."
-  cd /var/www/html/app/design/frontend/Kommerce/base/web/css/tailwind || exit
+  cd /var/www/html/app/design/frontend/Theme/base/web/css/tailwind || exit
   npm run build
-  sleep 1
+  sleep 0.5
 
   cd /var/www/html/ || exit
 

@@ -1,15 +1,15 @@
 #!/bin/bash
 
-COLOR_REST="$(tput sgr0)"
-COLOR_GREEN="$(tput setaf 2)"
-COLOR_RED="$(tput setaf 1)"
-COLOR_YELLOW="$(tput setaf 3)"
-COLOR_BLUE="$(tput setaf 4)"
+# shellcheck source=./setup/helpers.sh
+source "$(dirname "$0")/setup/helpers.sh"
+
+# shellcheck source=./setup/select_option
+source "$(dirname "$0")/setup/select_option"
 
 # Is docker installed!?
 if ! command -v docker &> /dev/null; then
     # Prompt for auto install or exit
-    printf '%s' "$COLOR_RED Docker not found. Install it. $COLOR_REST"
+    printf '%s' "$COLOR_RED [X] Docker not found. Install it. $COLOR_REST"
     echo "$COLOR_BLUE https://docs.docker.com/desktop/ $COLOR_REST"
     exit 1
 fi
@@ -17,7 +17,7 @@ fi
 # Check if DDEV is installed in system
 if ! command -v ddev &> /dev/null; then
     # Prompt for auto install or exit
-    read -r -p "$COLOR_RED DDEV not found.$COLOR_REST $COLOR_GREEN Do you want to install? (Y/n) $COLOR_REST" answer
+    read -r -p "$COLOR_RED [X] DDEV not found $COLOR_REST $COLOR_GREEN [?] Do you want to install DDEV? (Y/n) $COLOR_REST" answer
     case ${answer:0:1} in
       y|Y|Yes )
           brew install drud/ddev/ddev
@@ -29,37 +29,57 @@ if ! command -v ddev &> /dev/null; then
     esac
 fi
 
-function create_elasticsearch() {
+
+create_elasticsearch() {
     if [ ! -f ".ddev/docker-compose.elasticsearch.yaml" ]; then
       curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/docker-compose/docker-compose.elasticsearch.yaml --output .ddev/docker-compose.elasticsearch.yaml  --create-dirs --silent
-      printf '%s\n' "$COLOR_GREEN Docker-compose.elasticsearch.yaml added $COLOR_REST"
+      printf '%s\n' "$COLOR_GREEN [√] elasticsearch added $COLOR_REST"
     fi
 }
-function install_mutagen() {
+install_mutagen() {
   # Setup mutagen if not already set
   if [ ! -f ".ddev/commands/host/mutagen" ]; then
     printf '%s\n' "$COLOR_YELLOW Setting up mutagen sync script in current ddev project $COLOR_REST"
     curl https://raw.githubusercontent.com/williamengbjerg/ddev-mutagen/master/setup.sh | bash
   fi
 }
-function install_observer() {
-  if [ ! -f ".ddev/commands/web/observer" ]; then
-    printf '%s\n' "$COLOR_BLUE [!] Adding observer setup $COLOR_REST"
-    curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/observer --output .ddev/commands/web/observer --create-dirs --silent
-    ddev observer
-    printf '%s\n' "$COLOR_GREEN Virtualenv has been setup $COLOR_REST"
-  fi
-}
-function base_ddev_setup() {
 
-    curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/.bashrc  --output .ddev/homeadditions/.bashrc --create-dirs --silent
-    echo "$COLOR_GREEN .bashrc added $COLOR_REST"
+base_ddev_setup() {
+    curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/.bashrc            --output .ddev/homeadditions/.bashrc  --create-dirs --silent
+    curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/config.local.yaml   --output .ddev/config.local.yaml       --silent
+    echo "$COLOR_GREEN [√] .bashrc, config.local.yaml added $COLOR_REST"
 
     # Exclude backup-folder, project-stopped from IDE (Phpstorm)
     local FOLDER_NAME="${PWD##*/}"
     curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/phpstorm/exclude_project_stopped.iml  --output ".idea/${FOLDER_NAME}.iml" --create-dirs --silent
     #sed -i '' "s%\${DDEV_PROJECT}%${FOLDER_NAME}%g" .idea/"${FOLDER_NAME}".iml
-    echo "$COLOR_GREEN Config to exclude backup folder added $COLOR_REST"
+    echo "$COLOR_GREEN [√] Config to exclude backup folder added $COLOR_REST"
+}
+retrieve_helpers() {
+
+  # Copy files from github
+  curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/compile.sh   --output  bin/compile.sh  --create-dirs --silent
+  curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/helpers.sh   --output  bin/helpers.sh  --create-dirs --silent
+  curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/func.sh      --output  bin/func.sh     --create-dirs --silent
+
+  # make files executable
+  chmod +x bin/helpers.sh
+  chmod +x bin/compile.sh
+  chmod +x bin/func.sh
+  printf '%s\n' "$COLOR_GREEN [√] Helper files downloaded to bin folder $COLOR_REST"
+}
+
+### OBSERVER SCRIPT ###
+install_observer() {
+
+  if [ ! -f ".ddev/commands/web/observer" ]; then
+    printf '%s\n' "$COLOR_GREEN [√] Adding observer setup $COLOR_REST"
+    curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/observer --output .ddev/commands/web/observer --create-dirs --silent
+    ddev observer
+    printf '%s\n' "$COLOR_GREEN [√] Virtualenv has been setup $COLOR_REST"
+  fi
+}
+add_watch_observer() {
 
     # Install pip3 from dockerfile
     if [[ -d ".ddev/web-build" && -f ".ddev/web-build/Dockerfile.example" ]]; then
@@ -74,103 +94,111 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y -o Dpkg:
 RUN pip3
 config
 
-        printf '%s\n' "$COLOR_GREEN Dockerfile added in web-build $COLOR_REST"
+        printf '%s\n' "$COLOR_GREEN [√] Dockerfile added $COLOR_REST"
     fi
 }
-function retrieve_helpers() {
 
-  # Copy files from github
-  printf '%s\n' "$COLOR_BLUE Downloading helper files $COLOR_REST"
-  curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/compile.sh   --output  bin/compile.sh  --create-dirs --silent
-  curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/helpers.sh   --output  bin/helpers.sh  --create-dirs --silent
-  curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/func.sh      --output  bin/func.sh     --create-dirs --silent
+setup_existing_project() {
+  retrieve_helpers
+  ddev config --project-type=magento2 --docroot=pub --create-docroot
+  printf '%s\n' "$COLOR_GREEN [√] Folder created (.ddev) $COLOR_REST"
 
-  # make files executable
-  chmod +x bin/helpers.sh
-  chmod +x bin/compile.sh
-  chmod +x bin/func.sh
-  printf '%s\n' "$COLOR_GREEN Helper files downloaded to bin folder $COLOR_REST"
+  create_elasticsearch
+  base_ddev_setup
+  install_mutagen
+  checklist
+  exit 0
 }
-function checklist() {
-    echo "$COLOR_GREEN###############################################"
-    echo "#                                             #"
-    echo "#  Follow steps before opening                #"
-    echo "#  your project in a browser.                 #"
-    echo "#                                             #"
-    echo "###############################################"
-    echo
-    echo "   1. Import existing SQL"
-    echo "        ddev import-db                        "
-    echo
-    echo "----------------------------------------------"
-    echo
-    echo "   2. ddev start"
-    echo
-    echo "----------------------------------------------"
-    echo
-    echo "   3. ddev ssh & run"
-    echo "        magento deploy                        "
-    echo
-    echo "$COLOR_REST"
+setup_clean_magento2_install() {
+
+  # Fresh clean magento2 install
+  if [[ ! -d "bin" || ! -d "pub" ]]; then
+
+      # Prompt for a clean magento2 install
+      echo "${COLOR_YELLOW}Fresh Magento2 project install? (Y/n) ${COLOR_REST}"
+
+      select answer in "Yes" "No"; do
+
+          case $answer in
+
+              "Yes" )
+                  # Let ddev create some base folders
+                  echo "$COLOR_YELLOW [!] Installing magento2 $COLOR_REST"
+
+                  ddev config --project-type=magento2 --docroot=pub --create-docroot
+                  mkdir -p .ddev/commands/web/
+                  curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/setup_clean_magento2_install   --output .ddev/commands/web/setup_clean_magento2_install  --silent
+                  curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/.gitignore                     --output .gitignore                                       --silent
+
+                  if [ ! -f "composer.json" ]; then
+                    ddev start
+                    ddev composer create --repository=https://repo.magento.com/ magento/project-community-edition=2.4.2
+                    ddev stop
+                  fi
+
+                  create_elasticsearch
+                  retrieve_helpers
+                  base_ddev_setup
+                  install_mutagen
+
+                  ddev start
+                  ddev setup_clean_magento2_install
+
+                  exit 0
+              ;;
+
+              "No" )
+                  exit 1
+              ;;
+
+          esac
+      done
+
+  fi
+
 }
 
-#
-# Clean magento2 install
-#
-if [[ ! -d "bin" || ! -d "pub" ]]; then
+setup_tailwind_theme() {
+  echo "$COLOR_YELLOW [!] Tailwind setup script is not yet ready $COLOR_REST";
+  exit 0
+}
 
-    printf '%s\n' "$COLOR_RED Magento2 bin/pub folder not found. $COLOR_REST"
+logo
 
-    # Prompt for a clean magento2 install
-    echo "Install a clean Magento2 project? (Y/n) "
+## Setup choices
+setupOptions=(
+  "1. Setup Script (Existing Project)"
+  "2. With Observer (Existing project)"
+  "3. Integrate Tailwindcss (Existing project)"
+  "4. Clean Magento2 Install (v2.4.2)"
+  "Quit")
 
-    select answer in "Yes" "No"; do
+case $(select_opt "${setupOptions[@]}") in
 
-      case $answer in
-        "Yes" )
-            # Let ddev create some base folders
-            printf '%s\n' "$COLOR_GREEN Installing setup_magento2 script $COLOR_REST"
+    ## Base setup
+    0)
+        is_existing_project
+        setup_existing_project
+    ;;
 
-            ddev config --project-type=magento2 --docroot=pub --create-docroot
-            mkdir -p .ddev/commands/web/
-            curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/clean_magento2_install   --output .ddev/commands/web/clean_magento2_install  --silent
-            curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/.gitignore               --output .gitignore                                 --silent
+    ## With observer/watcher
+    1)
+        is_existing_project
+        setup_setup_existing_project
+        add_watch_observer
+        install_observer
+    ;;
 
-            if [ ! -f "composer.json" ]; then
-              ddev start
-              ddev composer create --repository=https://repo.magento.com/ magento/project-community-edition
-              ddev stop
-            fi
+    ## Setup tailwind theme
+    2)
+        is_existing_project
+        setup_tailwind_theme
+    ;;
 
-            create_elasticsearch
-            retrieve_helpers
-            base_ddev_setup
-            install_observer
-            install_mutagen
+    ## Clean magento2 install
+    3)
+        setup_clean_magento2_install
+    ;;
 
-            ddev start
-            ddev clean_magento2_install
-
-            exit 0
-        ;;
-        "No" )
-            exit 1
-        ;;
-      esac
-    done
-
-fi
-
-# Existing magento2 projects
-retrieve_helpers
-
-printf '%s\n' "$COLOR_BLUE Creating .ddev folder $COLOR_REST"
-ddev config --project-type=magento2 --docroot=pub --create-docroot
-printf '%s\n' "$COLOR_GREEN .ddev folder created $COLOR_REST"
-
-create_elasticsearch
-base_ddev_setup
-install_observer
-install_mutagen
-
-checklist
+    *) exit 1 ;;
+esac

@@ -6,7 +6,7 @@ END_COLOR="\e[0m"
 
 # Output message
 function message() {
-  message=$1
+  local message=$1
   echo -e "${BOLD_YELLOW} ${message} ${END_COLOR}";
 }
 
