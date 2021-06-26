@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# shellcheck source=./setup/helpers
-source "$(dirname "$0")/setup/helpers"
+# shellcheck source=./setup/helpers.sh
+source "$(dirname "$0")/setup/helpers.sh"
 
 # shellcheck source=./setup/select_option
 source "$(dirname "$0")/setup/select_option"
@@ -34,7 +34,7 @@ fi
 create_elasticsearch() {
     if [ ! -f ".ddev/docker-compose.elasticsearch.yaml" ]; then
       curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/docker-compose/docker-compose.elasticsearch.yaml --output .ddev/docker-compose.elasticsearch.yaml  --create-dirs --silent
-      printf '%s\n' "$COLOR_GREEN Docker-compose.elasticsearch.yaml added $COLOR_REST"
+      printf '%s\n' "$COLOR_GREEN [√] elasticsearch added $COLOR_REST"
     fi
 }
 install_mutagen() {
@@ -48,18 +48,17 @@ install_mutagen() {
 base_ddev_setup() {
     curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/.bashrc            --output .ddev/homeadditions/.bashrc  --create-dirs --silent
     curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/config.local.yaml   --output .ddev/config.local.yaml       --silent
-    echo "$COLOR_GREEN Added .bashrc & config.local.yaml $COLOR_REST"
+    echo "$COLOR_GREEN [√] .bashrc, config.local.yaml added $COLOR_REST"
 
     # Exclude backup-folder, project-stopped from IDE (Phpstorm)
     local FOLDER_NAME="${PWD##*/}"
     curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/phpstorm/exclude_project_stopped.iml  --output ".idea/${FOLDER_NAME}.iml" --create-dirs --silent
     #sed -i '' "s%\${DDEV_PROJECT}%${FOLDER_NAME}%g" .idea/"${FOLDER_NAME}".iml
-    echo "$COLOR_GREEN Config to exclude backup folder added $COLOR_REST"
+    echo "$COLOR_GREEN [√] Config to exclude backup folder added $COLOR_REST"
 }
 retrieve_helpers() {
 
   # Copy files from github
-  printf '%s\n' "$COLOR_BLUE Downloading helper files $COLOR_REST"
   curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/compile.sh   --output  bin/compile.sh  --create-dirs --silent
   curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/helpers.sh   --output  bin/helpers.sh  --create-dirs --silent
   curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/func.sh      --output  bin/func.sh     --create-dirs --silent
@@ -68,14 +67,14 @@ retrieve_helpers() {
   chmod +x bin/helpers.sh
   chmod +x bin/compile.sh
   chmod +x bin/func.sh
-  printf '%s\n' "$COLOR_GREEN Helper files downloaded to bin folder $COLOR_REST"
+  printf '%s\n' "$COLOR_GREEN [√] Helper files downloaded to bin folder $COLOR_REST"
 }
 
 ### OBSERVER SCRIPT ###
 install_observer() {
 
   if [ ! -f ".ddev/commands/web/observer" ]; then
-    printf '%s\n' "$COLOR_BLUE [!] Adding observer setup $COLOR_REST"
+    printf '%s\n' "$COLOR_GREEN [!] Adding observer setup $COLOR_REST"
     curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/observer --output .ddev/commands/web/observer --create-dirs --silent
     ddev observer
     printf '%s\n' "$COLOR_GREEN Virtualenv has been setup $COLOR_REST"
@@ -100,17 +99,14 @@ config
     fi
 }
 
-## Choices
 setup_existing_project() {
   retrieve_helpers
-  printf '%s\n' "$COLOR_BLUE Creating .ddev folder $COLOR_REST"
   ddev config --project-type=magento2 --docroot=pub --create-docroot
-  printf '%s\n' "$COLOR_GREEN .ddev folder created $COLOR_REST"
+  printf '%s\n' "$COLOR_GREEN [√] Folder created (.ddev) $COLOR_REST"
 
   create_elasticsearch
   base_ddev_setup
   install_mutagen
-
   checklist
 }
 setup_clean_magento2_install() {
@@ -127,12 +123,12 @@ setup_clean_magento2_install() {
 
               "Yes" )
                   # Let ddev create some base folders
-                  echo "$COLOR_GREEN Installing setup_magento2 script $COLOR_REST"
+                  echo "$COLOR_GREEN [@] Installing magento2 $COLOR_REST"
 
                   ddev config --project-type=magento2 --docroot=pub --create-docroot
                   mkdir -p .ddev/commands/web/
                   curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/setup_clean_magento2_install   --output .ddev/commands/web/setup_clean_magento2_install  --silent
-                  curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/.gitignore               --output .gitignore                                 --silent
+                  curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/.gitignore                     --output .gitignore                                       --silent
 
                   if [ ! -f "composer.json" ]; then
                     ddev start
@@ -162,15 +158,13 @@ setup_clean_magento2_install() {
 
 }
 
-
 setup_tailwind_theme() {
   echo "CURL TAILWIND THEME & Setup base";
 }
 
 logo
 
-# Choose setup
-PS3="Choose setup (enter number): "
+## Setup choices
 setupOptions=(
   "1. Setup Script (Existing Project)"
   "2. With Observer (Existing project)"
@@ -178,37 +172,34 @@ setupOptions=(
   "4. Clean Magento2 Install (v2.4.2)"
   "5. Quit")
 
-# echo -e "========================================================================="
-
 case $(select_opt "${setupOptions[@]}") in
 
+    ## Base setup
     0)
-        if [ "$(is_existing_project)" == "0" ]; then
-            echo "Setup existing project"
-
-            exit 1
-        fi
+        is_existing_project
+        setup_existing_project
         exit 0
     ;;
 
+    ## With observer/watcher
     1)
-        # setup_setup_existing_project
-        # add_watch_observer
-        # install_observer
+        is_existing_project
+        setup_setup_existing_project
+        add_watch_observer
+        install_observer
     ;;
 
+    ## Setup tailwind theme
     2)
-        # setup_existing_project
-        echo "you chose new install"
-        # setup_clean_magento2_install
-        exit 1
+        is_existing_project
+        setup_tailwind_theme
+        exit 0
     ;;
 
+    ## Clean magento2 install
     3)
-        echo "you chose Base/Tailwind"
-        # setup_tailwind_theme
-        exit 1
-      ;;
+        setup_clean_magento2_install
+    ;;
 
-    *) exit 0  ;;
+    *) exit 1 ;;
 esac

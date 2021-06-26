@@ -42,7 +42,7 @@ function select_option {
         # print options by overwriting the last lines
         local idx=0
         for opt; do
-            cursor_to $((startRow + $idx))
+            cursor_to $((startRow + idx))
             if [ $idx -eq $selected ]; then
                 print_selected "$opt"
             else

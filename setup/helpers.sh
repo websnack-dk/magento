@@ -12,7 +12,7 @@ COLOR_YELLOW="$(tput setaf 3)"
 COLOR_BLUE="$(tput setaf 4)"
 
 VERSION="$(release_version)"
-MAGENTO_VERSION="2.4.2"
+MAGENTO_VERSION="2.4.2-p1"
 
 
 error_message() {
@@ -48,12 +48,16 @@ check_magento_version() {
 }
 
 is_existing_project() {
-    check_magento_version
+
+    if [ "$(check_magento_version)" == "0" ]; then
+        return 1
+    fi
+    echo "$COLOR_RED [!] Magento2 v2.4.2 wasn't found $COLOR_REST"
+    exit 1
 }
 
 
 logo() {
-
   local logo="
   ███╗   ███╗ █████╗  ██████╗ ███████╗███╗   ██╗████████╗ ██████╗ ██████╗
   ████╗ ████║██╔══██╗██╔════╝ ██╔════╝████╗  ██║╚══██╔══╝██╔═══██╗╚════██╗
@@ -65,8 +69,8 @@ logo() {
     echo -e "\033[1;33m $logo \033[0m"
     echo -e "${COLOR_YELLOW}"
     echo -e "========================================================================="
-    echo -e "                             Base setup $VERSION"
-    echo -e "                           Choose project setup                     "
+    echo -e "                             Base setup $VERSION                         "
+    echo -e "                           Choose project setup                          "
     echo -e "========================================================================="
     echo -e "${COLOR_REST}"
 }
