@@ -60,6 +60,12 @@ base_ddev_setup() {
     curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/phpstorm/exclude_project_stopped.iml  --output ".idea/${FOLDER_NAME}.iml" --create-dirs --silent
     #sed -i '' "s%\${DDEV_PROJECT}%${FOLDER_NAME}%g" .idea/"${FOLDER_NAME}".iml
     echo "$COLOR_GREEN [√] Config to exclude backup folder added $COLOR_REST"
+
+    if [ "$1" == "with observer" ]; then
+        add_watch_observer
+        install_observer
+    fi
+
 }
 retrieve_helpers() {
 
@@ -110,13 +116,8 @@ setup_existing_project() {
   printf '%s\n' "$COLOR_GREEN [√] Folder created (.ddev) $COLOR_REST"
 
   create_elasticsearch
-  base_ddev_setup
+  base_ddev_setup "$1" || ""
   install_mutagen
-
-  if [ "$1" == "with observer" ]; then
-      add_watch_observer
-      install_observer
-  fi
 
   checklist
 }
@@ -149,7 +150,7 @@ setup_clean_magento2_install() {
 
                   create_elasticsearch
                   retrieve_helpers
-                  base_ddev_setup
+                  base_ddev_setup "with observer"
                   install_mutagen
 
                   ddev start
