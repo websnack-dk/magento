@@ -51,6 +51,7 @@ install_mutagen() {
 }
 
 base_ddev_setup() {
+    curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/ddev/base_url      --output .ddev/commands/web/base_url  --create-dirs --silent
     curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/.bashrc            --output .ddev/homeadditions/.bashrc  --create-dirs --silent
     curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/config.local.yaml   --output .ddev/config.local.yaml       --silent
     echo "$COLOR_GREEN [√] .bashrc, config.local.yaml added $COLOR_REST"
