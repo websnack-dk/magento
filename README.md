@@ -37,6 +37,11 @@ Pass: admin123
 `ddev ssh` into web-container and use shortcut-commands.
 
 ```text
+
+# ---- Commands from root via term ---- 
+
+ddev base_url       => Automatic update base_url in core_config_data 
+
 # ---- Custom commands ---- 
 
 magento composer    => Install or upgrade (base) composer packages  
