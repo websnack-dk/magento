@@ -1,0 +1,33 @@
+#!/usr/bin/php
+
+<?php
+
+## Description: Update base_url in db on current project
+## Usage: base_url
+## Example: "ddev base_url"
+
+$SITE_NAME      = getenv("DDEV_SITENAME");
+$HTTPS_ROUTE    = getenv("DDEV_ROUTER_HTTPS_PORT");
+$BASE_URL       = sprintf("https://%s.ddev.site:%s/",$SITE_NAME,$HTTPS_ROUTE);
+
+$DB_TABLE       = "core_config_data";
+$SEARCH_FIELD   = "base_url";
+
+$db_connect     = mysqli_connect("db:3306", "db", "db", "db");
+
+if($db_connect === false){
+    print("ERROR: Could not connect. " . mysqli_connect_error());
+}
+
+// Fetch base_urls
+$result = mysqli_query($db_connect, "SELECT `value`,`config_id` FROM $DB_TABLE WHERE path LIKE '%$SEARCH_FIELD%'");
+$check  = mysqli_num_rows($result);
+
+if ($check > 0) {
+    while ($row = mysqli_fetch_assoc($result)) {
+        # Update base_urls
+        mysqli_query($db_connect, "UPDATE $DB_TABLE SET value = '". $BASE_URL ."' WHERE config_id = '". $row['config_id'] ."'");
+    }
+}
+
+print("$SEARCH_FIELD updated :) \n");
