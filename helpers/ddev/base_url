@@ -6,8 +6,8 @@
 ## Usage: base_url
 ## Example: "ddev base_url"
 
-$SITE_NAME      = getenv('DDEV_SITENAME');
-$HTTPS_ROUTE    = getenv('DDEV_ROUTER_HTTPS_PORT');
+$SITE_NAME      = getenv("DDEV_SITENAME");
+$HTTPS_ROUTE    = getenv("DDEV_ROUTER_HTTPS_PORT");
 $BASE_URL       = sprintf("https://%s.ddev.site:%s/",$SITE_NAME,$HTTPS_ROUTE);
 
 $DB_TABLE       = "core_config_data";
