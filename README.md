@@ -1,9 +1,11 @@
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/websnack-dk/magento?color=blue) ![https://github.com/websnack-dk/magento/graphs/commit-activity](https://img.shields.io/badge/maintained-yes-green)
 
-
-# Script to setup an existing/or- a clean Magento2 installation with DDEV-local.
+# Setup existing/clean magento2 install with DDEV-local.
 
 Only tested on Apple Silicon M1  
+
+![alt text](graphics/preview.gif)
+
 Requirements will automatically be installed, except Docker Desktop.
 
 ### Requirements
