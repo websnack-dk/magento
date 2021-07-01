@@ -7,7 +7,8 @@ remove_folders() {
   message "Removing: Generated folders.."
   rm -rf var/view_preprocessed/
   rm -rf pub/static/frontend/
-  rm -r generated/*/*
+  # rm -r generated/*/*
+  find '../generated' ! -name '.htaccess' -type d -delete -empty
   rm -rf var/cache
   rm -rf pub/static/*
   rm -rf var/generation
