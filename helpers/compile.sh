@@ -5,10 +5,11 @@ source "$(dirname "$0")/helpers.sh"
 
 remove_folders() {
   message "Removing: Generated folders.."
+
+  find 'generated' -depth -not -name '.htaccess' -not -path 'generated' -type d -exec rm -rf {} \;
+
   rm -rf var/view_preprocessed/
   rm -rf pub/static/frontend/
-  # rm -r generated/*/*
-  find '../generated' ! -name '.htaccess' -type d -delete -empty
   rm -rf var/cache
   rm -rf pub/static/*
   rm -rf var/generation
