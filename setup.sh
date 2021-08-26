@@ -53,7 +53,7 @@ install_mutagen() {
 base_ddev_setup() {
     curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/ddev/base_url      --output .ddev/commands/web/base_url  --create-dirs --silent
     curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/.bashrc            --output .ddev/homeadditions/.bashrc  --create-dirs --silent
-    curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/config.local.yaml   --output .ddev/config.local.yaml       --silent
+    curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/config.local.yaml  --output .ddev/config.local.yaml      --silent
     echo "$COLOR_GREEN [√] .bashrc, config.local.yaml added $COLOR_REST"
 
     # Exclude backup-folder, project-stopped from IDE (Phpstorm)
@@ -138,7 +138,7 @@ setup_clean_magento2_install() {
 
               "Yes" )
                   # Let ddev create some base folders
-                  echo "$COLOR_YELLOW [!] Installing magento2 $COLOR_REST"
+                  echo "$COLOR_YELLOW [!] Installing Magento v.$MAGENTO_VERSION $COLOR_REST"
 
                   ddev config --project-type=magento2 --docroot=pub --create-docroot
                   mkdir -p .ddev/commands/web/
@@ -147,7 +147,7 @@ setup_clean_magento2_install() {
 
                   if [ ! -f "composer.json" ]; then
                     ddev start
-                    ddev composer create --repository=https://repo.magento.com/ magento/project-community-edition=2.4.2
+                    ddev composer create --repository=https://repo.magento.com/ magento/project-community-edition=$MAGENTO_VERSION
                     ddev stop
                   fi
 
@@ -190,7 +190,7 @@ setupOptions=(
   "1. Setup Script (Existing Project)"
   "2. With Observer (Existing project)"
   "3. Integrate Tailwindcss (Existing project)"
-  "4. Clean Magento2 Install (v2.4.2)"
+  "4. Clean install - Magento v.$MAGENTO_VERSION"
   "Quit")
 
 case $(select_opt "${setupOptions[@]}") in
