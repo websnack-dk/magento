@@ -12,7 +12,7 @@ COLOR_YELLOW="$(tput setaf 3)"
 COLOR_BLUE="$(tput setaf 4)"
 
 VERSION="$(release_version)"
-MAGENTO_VERSION="2.4.2"
+MAGENTO_VERSION="2.4.3"
 
 
 error_message() {
@@ -52,7 +52,7 @@ is_existing_project() {
     if [ "$(check_magento_version)" == "0" ]; then
         return 1
     fi
-    echo "$COLOR_RED [!] Magento2 v2.4.2 wasn't found $COLOR_REST"
+    echo "$COLOR_RED [!] Magento v.$MAGENTO_VERSION was not found $COLOR_REST"
     exit 1
 }
 
