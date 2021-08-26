@@ -17,7 +17,7 @@ Requirements will automatically be installed, except Docker Desktop.
 
 ---
 
-## Usage
+## ✨ Usage
 Copy/paste curl-command in an existing or empty project folder and enjoy magento2 ☕
 ```bashpro shell script
 bash <(curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/setup.sh)
