@@ -74,7 +74,8 @@ retrieve_helpers() {
   curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/compile.sh   --output  bin/compile.sh  --create-dirs --silent
   curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/helpers.sh   --output  bin/helpers.sh  --create-dirs --silent
   curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/func.sh      --output  bin/func.sh     --create-dirs --silent
-
+  curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/helpers/migrate      --output  bin/migrate     --create-dirs --silent
+  
   # make files executable
   chmod +x bin/helpers.sh
   chmod +x bin/compile.sh
