@@ -1,0 +1,53 @@
+#!/bin/bash
+
+# shellcheck source=./helpers.sh
+source "$(dirname "$0")/helpers.sh"
+
+MIGRATION_DIR="app/code/VENDOR/Migration"
+CONFIG_FILE=$(find "$(cd "$MIGRATION_DIR" || "exit"; pwd)" -name "config.xml")
+
+confirmMigration() {
+
+    local USER_REPLY
+
+    message "Do you want to run migrate:$*? [Y/n] "
+    read -r -N 1 USER_REPLY
+    echo
+
+    if test "$USER_REPLY" = "y" -o "$USER_REPLY" = "Y"; then
+        message "Running"
+    else
+        message "Migration has been cancelled"
+        exit 1
+    fi
+}
+
+# Run data migration
+if [ "$1" == "data" ]; then
+
+  if [[ -d "$MIGRATION_DIR" && -f "$CONFIG_FILE" ]]; then
+
+      confirmMigration "$@"
+
+      # We can run our data migration!
+      bin/magento migrate:data -a --reset "$CONFIG_FILE"
+      message "√ Data migration done"
+  else
+      message "$MIGRATION_DIR directory or Config file was not found."
+  fi
+
+# Run settings migration
+elif  [ "$1" == "settings" ]; then
+
+  if [[ -d "$MIGRATION_DIR" && -f "$CONFIG_FILE" ]]; then
+
+      confirmMigration "$@"
+
+      # We can run our data migration!
+      bin/magento migrate:settings -a --reset "$CONFIG_FILE"
+      message "√ Settings migration done."
+  else
+      message "$MIGRATION_DIR directory or Config file was not found."
+  fi
+
+fi
