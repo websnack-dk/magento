@@ -34,8 +34,8 @@ if [ "$1" == "deploy" ]; then
   bin/magento setup:static-content:deploy -f da_DK
   bin/magento setup:di:compile
   bin/magento indexer:reindex
-  bin/magento cache:clean
-  bin/magento cache:flush
+  magerun2 cache:clean
+  magerun2 cache:flush
 
   message "Enable Developer mode"
   bin/magento deploy:mode:set developer
@@ -62,7 +62,7 @@ elif [ "$1" == "dump-db" ]; then
 
   ## Export SQL
   # ./n98-magerun2.phar db:dump --strip="@development" # Development
-  n98-magerun2.phar db:dump --compression="gzip" # full-zip
+  ./n98-magerun2.phar db:dump --compression="gzip" # full-zip
 
   ## CleanUp: Forget and remove n98-magerun2.phar
   rm -rf ./n98-magerun2.phar
@@ -74,8 +74,8 @@ elif [ "$1" == "rebuild" ]; then
   remove_folders
 
   message "Re-Compiling Files.."
-  bin/magento cache:clean
-  bin/magento cache:flush
+  magerun2 cache:clean
+  magerun2 cache:flush
   bin/magento setup:upgrade
   bin/magento setup:di:compile
   bin/magento setup:static-content:deploy -f
@@ -87,8 +87,8 @@ elif [ "$1" == "flush_cache" ]; then
 
   message "Clearing & Flushing files.."
   remove_folders
-  bin/magento cache:clean
-  bin/magento cache:flush
+  magerun2 cache:clean
+  magerun2 cache:flush
   message "Finished..."
 
 elif [ "$1" == "tailwind" ]; then
@@ -106,8 +106,8 @@ elif [ "$1" == "tailwind" ]; then
 
   # Clean XML etc
   message "Cache: Clean/Flush.."
-  bin/magento cache:clean
-  bin/magento cache:flush
+  magerun2 cache:clean
+  magerun2 cache:flush
 
   message "Done Compiling"
 fi
