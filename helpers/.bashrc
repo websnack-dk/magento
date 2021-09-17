@@ -12,6 +12,7 @@ alias updatephp="update-alternatives --config php"
 alias composer1="composer self-update --1"
 alias composer2="composer self-update --2"
 alias comup="composer update"
+alias migrate="bin/migrate"
 
 alias m="bin/magento"
 alias mdev="bin/magento deploy:mode:set developer"
