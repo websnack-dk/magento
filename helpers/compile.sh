@@ -78,8 +78,7 @@ elif [ "$1" == "rebuild" ]; then
   magerun2 cache:flush
   bin/magento setup:upgrade
   bin/magento setup:di:compile
-  bin/magento setup:static-content:deploy -f
-  bin/magento setup:static-content:deploy -f da_DK
+  bin/magento setup:static-content:deploy da_DK --exclude-theme Magento/luma --exclude-theme Magento/blank --force
   message "Files Has Been Re-build"
 
 ## Compile LESS-files
@@ -100,7 +99,6 @@ elif [ "$1" == "tailwind" ]; then
   message "Compiling: Tailwind.."
   cd /var/www/html/app/design/frontend/Theme/base/web/css/tailwind || exit
   npm run build
-  sleep 0.5
 
   cd /var/www/html/ || exit
 
