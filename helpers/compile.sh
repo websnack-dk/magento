@@ -30,7 +30,7 @@ if [ "$1" == "deploy" ]; then
   bash <(curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/modules/disable_modules)
 
   magerun2 setup:upgrade
-  magerun2 setup:static-content:deploy da_DK --theme Kommerce/base --force
+  magerun2 setup:static-content:deploy da_DK --theme Vendor/base --force
   magerun2 setup:di:compile
   magerun2 indexer:reindex
   magerun2 cache:clean
