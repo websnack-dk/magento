@@ -22,16 +22,31 @@ confirmMigration() {
     fi
 }
 
+# Change mode 
+setDefaultMode() {
+  message "Enable Developer mode"
+  bin/magento deploy:mode:set default 
+}
+setDeveloperMode() {
+  message "Changed to Developer mode"
+  bin/magento deploy:mode:set developer
+}
+
+
 # Run data migration
 if [ "$1" == "data" ]; then
 
   if [[ -d "$MIGRATION_DIR" && -f "$CONFIG_FILE" ]]; then
 
       confirmMigration "$@"
+      
+      setDefaultMode 
 
       # We can run our data migration!
       bin/magento migrate:data -a --reset "$CONFIG_FILE"
       message "√ Data migration done"
+      
+      setDeveloperMode
   else
       message "$MIGRATION_DIR directory or Config file was not found."
   fi
@@ -42,10 +57,14 @@ elif  [ "$1" == "settings" ]; then
   if [[ -d "$MIGRATION_DIR" && -f "$CONFIG_FILE" ]]; then
 
       confirmMigration "$@"
+      
+      setDefaultMode
 
       # We can run our data migration!
       bin/magento migrate:settings -a --reset "$CONFIG_FILE"
       message "√ Settings migration done."
+      
+      setDeveloperMode
   else
       message "$MIGRATION_DIR directory or Config file was not found."
   fi
