@@ -23,22 +23,21 @@ if [ "$1" == "deploy" ]; then
   rm -rf var/cache/*
 
   message "Enable modules..."
-  bin/magento module:enable --all
+  magerun2 module:enable --all
 
   # Disable modules
   message "Disable modules:"
   bash <(curl -s https://raw.githubusercontent.com/websnack-dk/magento/main/modules/disable_modules)
 
-  bin/magento setup:upgrade
-  bin/magento setup:static-content:deploy -f
-  bin/magento setup:static-content:deploy -f da_DK
-  bin/magento setup:di:compile
-  bin/magento indexer:reindex
+  magerun2 setup:upgrade
+  magerun2 setup:static-content:deploy da_DK --theme Kommerce/base --force
+  magerun2 setup:di:compile
+  magerun2 indexer:reindex
   magerun2 cache:clean
   magerun2 cache:flush
 
   message "Enable Developer mode"
-  bin/magento deploy:mode:set developer
+  magerun2 deploy:mode:set developer
 
   message "Deployed"
 
@@ -76,9 +75,9 @@ elif [ "$1" == "rebuild" ]; then
   message "Re-Compiling Files.."
   magerun2 cache:clean
   magerun2 cache:flush
-  bin/magento setup:upgrade
-  bin/magento setup:di:compile
-  bin/magento setup:static-content:deploy da_DK --exclude-theme Magento/luma --exclude-theme Magento/blank --force
+  magerun2 setup:upgrade
+  magerun2 setup:di:compile
+  magerun2 setup:static-content:deploy da_DK --exclude-theme Magento/luma --exclude-theme Magento/blank --force
   message "Files Has Been Re-build"
 
 ## Compile LESS-files
