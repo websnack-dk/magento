@@ -52,6 +52,11 @@ magento rebuild     => Re-compiling all files: Clean, Flush, Upgrade, di:compile
 magento tailwind    => Compile css file, remove generated folders & Clean/flush (Requires tailwind setup in order to work)
 magento dump-db     => Export SQL via. magerun2 and removes n98-magerun2.phar
 
+# ---- Data migration, If module is installed ---- 
+
+migrate settings    => Check and run Data migrations
+migrate data        => Check and run Settings migration
+
 # ---- Base shortcut helpers ----
  
 composer1           => composer self-update --1
