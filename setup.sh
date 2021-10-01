@@ -119,7 +119,7 @@ setup_existing_project() {
 
   create_elasticsearch
   base_ddev_setup "$1" || ""
-  install_mutagen
+  #install_mutagen
 
   checklist
   remove_setup_folder
@@ -155,7 +155,7 @@ setup_clean_magento2_install() {
                   create_elasticsearch
                   retrieve_helpers
                   base_ddev_setup "with observer"
-                  install_mutagen
+                  # install_mutagen
 
                   ddev start
                   ddev setup_clean_magento2_install
